@@ -1,5 +1,6 @@
-package com.example.evaluatec;
+package com.example.evaluatec.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,9 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import com.example.evaluatec.R;
 import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.api.LoginResponse;
 import com.example.evaluatec.modelos.Usuario;
+import com.example.evaluatec.pantallas.EstudianteActivity;
+import com.example.evaluatec.pantallas.ProfesorActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,15 +63,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLogin() {
-        String username = usernameField.getText().toString();
-        String password = passwordField.getText().toString();
+        String correo = usernameField.getText().toString();
+        String contrasena = passwordField.getText().toString();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (correo.isEmpty() || contrasena.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Usuario usuario = new Usuario(username, password);
+        Usuario usuario = new Usuario(correo, contrasena);
 
         Call<LoginResponse> call = apiService.login(usuario);
         call.enqueue(new Callback<LoginResponse>() {
@@ -75,8 +79,23 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     LoginResponse login = response.body();
+                    String rol = login.getRol();
+
                     Toast.makeText(LoginActivity.this, "Login exitoso: " + login.getMensaje(), Toast.LENGTH_SHORT).show();
-                    // Aquí se puede colocar la siguiente actividad
+
+                    //Aqui obtiene la pantalla que corresponde segun rol
+                    Intent intent;
+                    if (login.getRol().equalsIgnoreCase("PROFESOR")) {
+                        intent = new Intent(LoginActivity.this, ProfesorActivity.class);
+                    } else {
+                        intent = new Intent(LoginActivity.this, EstudianteActivity.class);
+                    }
+                    //Se pasa el id del rol
+                    intent.putExtra("usuarioId", login.getId());
+                    intent.putExtra("rol", login.getRol());
+
+                    startActivity(intent);
+                    finish(); // Cierra la actividad actual
                 } else {
                     Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
                 }

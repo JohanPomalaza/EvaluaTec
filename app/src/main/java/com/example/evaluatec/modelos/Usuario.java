@@ -1,11 +1,11 @@
 package com.example.evaluatec.modelos;
 
 public class Usuario {
-    private String nombreUsuario;
+    private String correo;
     private String contrasena;
 
-    public Usuario(String nombreUsuario, String contrasena) {
-        this.nombreUsuario = nombreUsuario;
+    public Usuario(String correo, String contrasena) {
+        this.correo = correo;
         this.contrasena = contrasena;
     }
 }
