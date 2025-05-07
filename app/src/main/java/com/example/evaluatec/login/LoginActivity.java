@@ -49,10 +49,10 @@ public class LoginActivity extends AppCompatActivity {
 
         constraintSet.setVerticalBias(R.id.titleLogin, 0.4f);
         constraintSet.applyTo(layout);
-
+        String baseUrl = "http://10.0.2.2:5262/";
         // Inicializa Retrofit
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:5262/") // Accede a tu API desde el emulador
+                .baseUrl(baseUrl) // Accede a tu API desde el emulador
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
