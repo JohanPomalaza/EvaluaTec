@@ -1,9 +1,12 @@
 package com.example.evaluatec.pantallas;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import com.example.evaluatec.R;
 import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.api.CursoService;
 import com.example.evaluatec.modelos.Curso;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,10 +45,15 @@ public class EstudianteActivity extends AppCompatActivity {
     private CursoAdapter cursoAdapter;
     private CursoService cursoService;
 
+    private BottomNavigationView bottomNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_estudiante_activity);
+
+        bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         recyclerView = findViewById(R.id.rvCursos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -64,8 +73,32 @@ public class EstudianteActivity extends AppCompatActivity {
 
 
         initViews();
-        setupListeners();
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                // Handle home selection
+                return true;
+            } else if (id == R.id.nav_search) {
+                // Handle search selection
+                return true;
+            } else if (id == R.id.nav_porelegir) {
+                // Handle porelegir selection
+                return true;
+            } else if (id == R.id.nav_reportes) {
+                // Handle reportes selection
+                return true;
+            } else if (id == R.id.nav_profile) {
+                startActivity(new Intent(EstudianteActivity.this, perfil_activity.class));
+                return true;
+            }
+            return false;
+        }
+    };
+
+
     private void obtenerCursos(String authToken) {
         Call<List<Curso>> call = cursoService.getCursos("Bearer " + authToken);
 
@@ -90,49 +123,10 @@ public class EstudianteActivity extends AppCompatActivity {
     private void initViews() {
         tvWelcome = findViewById(R.id.tvWelcome);
         rvCursos = findViewById(R.id.rvCursos);
-        tvLastAnnouncement = findViewById(R.id.tvLastAnnouncement);
-        btnVerTodosAnuncios = findViewById(R.id.btnVerTodosAnuncios);
 
         // Configurar RecyclerView
         rvCursos.setLayoutManager(new LinearLayoutManager(this));
         rvCursos.setHasFixedSize(true);
-    }
-
-    private void setupListeners() {
-        // Botón "Ver todos" los anuncios
-        btnVerTodosAnuncios.setOnClickListener(v -> {
-            // Navegar a actividad/fragmento con todos los anuncios
-            Toast.makeText(this, "Mostrando todos los anuncios", Toast.LENGTH_SHORT).show();
-        });
-
-        // Configurar click listeners para las tarjetas de acciones rápidas
-        setupQuickActions();
-    }
-    private void setupQuickActions() {
-        // Tareas Pendientes
-        CardView cardTareas = findViewById(R.id.card_tareas); // Necesitarías agregar IDs en tu XML
-        cardTareas.setOnClickListener(v -> {
-            // Navegar a actividad/fragmento de tareas pendientes
-            Toast.makeText(this, "Mostrando tareas pendientes", Toast.LENGTH_SHORT).show();
-        });
-
-        // Materiales (similar para las otras tarjetas)
-        CardView cardMateriales = findViewById(R.id.card_materiales);
-        cardMateriales.setOnClickListener(v -> {
-            Toast.makeText(this, "Mostrando materiales", Toast.LENGTH_SHORT).show();
-        });
-
-        // Calificaciones
-        CardView cardCalificaciones = findViewById(R.id.card_calificaciones);
-        cardCalificaciones.setOnClickListener(v -> {
-            Toast.makeText(this, "Mostrando calificaciones", Toast.LENGTH_SHORT).show();
-        });
-
-        // Foro
-        CardView cardForo = findViewById(R.id.card_foro);
-        cardForo.setOnClickListener(v -> {
-            Toast.makeText(this, "Mostrando foro", Toast.LENGTH_SHORT).show();
-        });
     }
 
 

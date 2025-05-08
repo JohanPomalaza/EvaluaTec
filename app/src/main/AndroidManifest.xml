@@ -31,6 +31,10 @@
             android:name=".pantallas.ProfesorActivity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".pantallas.perfil_activity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>
