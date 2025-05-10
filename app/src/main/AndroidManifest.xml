@@ -35,6 +35,14 @@
             android:name=".pantallas.perfil_activity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".pantallas.GradesActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".pantallas.CoursesActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

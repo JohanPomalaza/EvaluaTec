@@ -1,23 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:padding="16dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/background_shapes"
+    tools:ignore="ExtraText">
 
+    <!-- Header con nombre -->
     <TextView
-        android:text="Panel del Profesor"
+        android:id="@+id/tvWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido, Profesor [Nombre]"
+        android:textColor="#6495ed"
         android:textSize="24sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
 
-    <Button
-        android:id="@+id/btnIngresarNotas"
+    <!-- Tarjeta de estadísticas -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ingresar Notas" />
+        android:layout_height="100dp"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="12dp"
+        android:layout_marginBottom="24dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp">
+
+            <!-- Alumnos -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30 Alumnos"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
+            <!-- Cursos -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5 Cursos"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Botón para Ver Cursos -->
     <Button
-        android:id="@+id/btnEditarContenido"
+        android:id="@+id/btnViewCourses"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Editar Contenido" />
+        android:layout_height="60dp"
+        android:text="Ver Cursos"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:drawableLeft="@drawable/ic_list"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botón para Registrar Notas -->
+    <Button
+        android:id="@+id/btnRegisterGrades"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Registrar Notas"
+        android:backgroundTint="@color/primary"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:drawableLeft="@drawable/ic_edit"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Botón para Generar Reportes -->
+    <Button
+        android:id="@+id/btnGenerateReports"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Generar Reportes"
+        android:backgroundTint="@color/accent"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:drawableLeft="@drawable/ic_report"
+        android:drawablePadding="8dp"/>
 </LinearLayout>

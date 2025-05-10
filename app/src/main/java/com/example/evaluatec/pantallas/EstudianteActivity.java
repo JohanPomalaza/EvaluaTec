@@ -11,10 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import androidx.cardview.widget.CardView;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Toast;
@@ -22,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.evaluatec.R;
-import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.api.CursoService;
 import com.example.evaluatec.modelos.Curso;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,8 +35,6 @@ public class EstudianteActivity extends AppCompatActivity {
 
     private TextView tvWelcome;
     private RecyclerView rvCursos;
-    private TextView tvLastAnnouncement;
-    private Button btnVerTodosAnuncios;
 
     private RecyclerView recyclerView;
     private CursoAdapter cursoAdapter;
@@ -59,10 +54,10 @@ public class EstudianteActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         cursoAdapter = new CursoAdapter(new ArrayList<>());
         recyclerView.setAdapter(cursoAdapter);
-
+        String baseUrl = "http://10.0.2.2:5262/";
         // Configurar Retrofit
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:5262/") // Reemplaza con tu URL base
+                .baseUrl(baseUrl) // Reemplaza con tu URL base
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -125,10 +120,9 @@ public class EstudianteActivity extends AppCompatActivity {
         rvCursos = findViewById(R.id.rvCursos);
 
         // Configurar RecyclerView
-        rvCursos.setLayoutManager(new LinearLayoutManager(this));
+        rvCursos.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvCursos.setHasFixedSize(true);
     }
-
 
     // Adaptador para RecyclerView
     private static class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.CursoViewHolder> {
@@ -146,7 +140,7 @@ public class EstudianteActivity extends AppCompatActivity {
         @Override
         public CursoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_curso, parent, false);
+                    .inflate(R.layout.item_curso_estuadiante, parent, false);
             return new CursoViewHolder(view);
         }
 
