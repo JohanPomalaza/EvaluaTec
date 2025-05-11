@@ -80,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     LoginResponse login = response.body();
                     String rol = login.getRol();
+                    String nombre = login.getNombre();
+                    String apellido = login.getApellido();
 
                     Toast.makeText(LoginActivity.this, "Login exitoso: " + login.getMensaje(), Toast.LENGTH_SHORT).show();
 
@@ -89,6 +91,8 @@ public class LoginActivity extends AppCompatActivity {
                         intent = new Intent(LoginActivity.this, ProfesorActivity.class);
                     } else {
                         intent = new Intent(LoginActivity.this, EstudianteActivity.class);
+                        intent.putExtra("nombre", nombre);
+                        intent.putExtra("apellido", apellido);
                     }
                     //Se pasa el id del rol
                     intent.putExtra("usuarioId", login.getId());

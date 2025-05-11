@@ -5,6 +5,9 @@ public class LoginResponse {
     private int id;
     private String rol;
 
+    private String nombre;
+    private String apellido;
+
     public String getMensaje() {
         return mensaje;
     }
@@ -15,5 +18,11 @@ public class LoginResponse {
 
     public String getRol() {
         return rol;
+    }
+    public String getNombre() {
+        return nombre;
+    }
+    public String getApellido() {
+        return apellido;
     }
 }

@@ -1,13 +1,19 @@
 package com.example.evaluatec.modelos;
 
 public class Curso {
-    private int id_curso;
-    private String nombre_curso;
-    public int getId_curso() {
-        return id_curso;
+    private int idCurso;
+    private String nombreCurso;
+    private int idUsuario;
+
+    // Getters y Setters
+    public int getIdCurso() {
+        return idCurso;
     }
 
-    public String getNombre_curso() {
-        return nombre_curso;
+    public String getNombreCurso() {
+        return nombreCurso;
     }
+
+    public int getIdUsuario() {return idUsuario;}
+    public void setIdUsuario(int idUsuario) {this.idUsuario = idUsuario;}
 }
