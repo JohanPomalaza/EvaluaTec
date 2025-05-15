@@ -14,25 +14,29 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.evaluatec.R;
 
 public class ProfesorActivity extends AppCompatActivity {
-
+    private int usuarioId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.fragment_profesor_activity);
 
+        usuarioId = getIntent().getIntExtra("usuarioId", -1);
+        if (usuarioId == -1) {
+            finish();
+            return;
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Configurar botón de cursos
         Button btnCourses = findViewById(R.id.btnViewCourses);
         btnCourses.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfesorActivity.this, CoursesActivity.class);
+            Intent intent = new Intent(ProfesorActivity.this, fragment_cursos_docente.class);
+            intent.putExtra("usuarioId", usuarioId);
             startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
 
         // Configurar botón de registrar notas
@@ -40,7 +44,6 @@ public class ProfesorActivity extends AppCompatActivity {
         btnRegisterGrades.setOnClickListener(v -> {
             Intent intent = new Intent(ProfesorActivity.this, GradesActivity.class);
             startActivity(intent);
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         });
     }
 

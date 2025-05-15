@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/light_background"
-    android:padding="16dp"
-    tools:context=".CoursesActivity">
+    android:padding="16dp">
 
     <!-- App Bar con botón de retroceso -->
     <com.google.android.material.appbar.MaterialToolbar
@@ -131,6 +130,6 @@
         android:layout_marginTop="8dp"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
-        tools:listitem="@layout/item_course"/>
+        tools:listitem="@layout/item_curso"/>
 
 </LinearLayout>

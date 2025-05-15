@@ -29,8 +29,10 @@ public class NotaAdapter extends RecyclerView.Adapter<NotaAdapter.NotaViewHolder
     @Override
     public void onBindViewHolder(@NonNull NotaViewHolder holder, int position) {
         Nota nota = listaNotas.get(position);
-        holder.tvDescripcion.setText(nota.getTema());
-        holder.tvCalificacion.setText(String.valueOf(nota.getNota()));
+
+        holder.tvNombreTema.setText("" + (nota.getTema() != null ? nota.getTema() : "Sin Tema"));
+        holder.tvNota.setText("Nota: " + String.valueOf(nota.getNota()));
+        holder.tvNombreRama.setText("" + (nota.getRama() != null ? nota.getRama() : "Sin Rama"));
     }
 
     @Override
@@ -38,13 +40,19 @@ public class NotaAdapter extends RecyclerView.Adapter<NotaAdapter.NotaViewHolder
         return listaNotas.size();
     }
 
+    public void actualizarLista(List<Nota> nuevasNotas) {
+        this.listaNotas = nuevasNotas;
+        notifyDataSetChanged();
+    }
+
     static class NotaViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDescripcion, tvCalificacion;
+        TextView tvNombreTema, tvNota, tvNombreRama;
 
         NotaViewHolder(View itemView) {
             super(itemView);
-            tvDescripcion = itemView.findViewById(R.id.tvTipoNota);
-            tvCalificacion = itemView.findViewById(R.id.tvNota);
+            tvNombreTema = itemView.findViewById(R.id.tvNombreTema);
+            tvNota = itemView.findViewById(R.id.tvNota);
+            tvNombreRama = itemView.findViewById(R.id.tvNombreRama);
         }
     }
 }

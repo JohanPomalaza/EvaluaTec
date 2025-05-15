@@ -3,6 +3,7 @@ package com.example.evaluatec.pantallas;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,8 @@ import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.Nota;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -64,12 +67,6 @@ import retrofit2.Response;
                     return true;
                 } else if (itemId == R.id.nav_search) {
                     // Handle search selection
-                    return true;
-                } else if (itemId == R.id.nav_porelegir) {
-                    // Handle porelegir selection
-                    return true;
-                } else if (itemId == R.id.nav_reportes) {
-                    // Handle reportes selection
                     return true;
                 } else if (itemId == R.id.nav_profile) {
                     startActivity(new Intent(EstudianteActivity.this, perfil_activity.class));
@@ -138,6 +135,7 @@ import retrofit2.Response;
                 @Override
                 public void onResponse(@NonNull Call<List<Nota>> call, @NonNull Response<List<Nota>> response) {
                     if (response.isSuccessful() && response.body() != null) {
+                        Log.d("API_RESPONSE", new Gson().toJson(response.body()));
                         listaNotas.clear();
                         listaNotas.addAll(response.body());
                         notaAdapter.notifyDataSetChanged();

@@ -1,11 +1,18 @@
 package com.example.evaluatec.modelos;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Nota {
     private int idNota;
     private double nota;
+    private int idUsuarioEstudiante;
+    private int idTema;
+
+    @SerializedName("nombre")
     private String tema;
+
+    @SerializedName("rama")
     private String rama;
-    private String curso;
 
     // Getters y Setters
     public int getIdNota() {
@@ -39,12 +46,25 @@ public class Nota {
     public void setRama(String rama) {
         this.rama = rama;
     }
-
-    public String getCurso() {
-        return curso;
+    public Nota(int idUsuarioEstudiante, int idTema, double nota) {
+        this.idUsuarioEstudiante = idUsuarioEstudiante;
+        this.idTema = idTema;
+        this.nota = nota;
     }
 
-    public void setCurso(String curso) {
-        this.curso = curso;
+    public int getIdUsuarioEstudiante() {
+        return idUsuarioEstudiante;
+    }
+
+    public void setIdUsuarioEstudiante(int idUsuarioEstudiante) {
+        this.idUsuarioEstudiante = idUsuarioEstudiante;
+    }
+
+    public int getIdTema() {
+        return idTema;
+    }
+
+    public void setIdTema(int idTema) {
+        this.idTema = idTema;
     }
 }
