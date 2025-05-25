@@ -31,13 +31,20 @@ public class ProfesorActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Button btnSecciones = findViewById(R.id.btnViewSecciones);
+        btnSecciones.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfesorActivity.this, SeccionesActivity.class);
+            intent.putExtra("usuarioId", usuarioId);
+            startActivity(intent);
+        });
 
-        Button btnCourses = findViewById(R.id.btnViewCourses);
+
+        /*Button btnCourses = findViewById(R.id.btnViewCourses);
         btnCourses.setOnClickListener(v -> {
             Intent intent = new Intent(ProfesorActivity.this, fragment_cursos_docente.class);
             intent.putExtra("usuarioId", usuarioId);
             startActivity(intent);
-        });
+        });*/
 
         // Configurar botón de registrar notas
         Button btnRegisterGrades = findViewById(R.id.btnRegisterGrades);

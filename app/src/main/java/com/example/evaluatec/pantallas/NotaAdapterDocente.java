@@ -1,33 +1,42 @@
 package com.example.evaluatec.pantallas;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evaluatec.R;
+import com.example.evaluatec.api.ApiCliente;
+import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.modelos.Nota;
 
 import java.util.List;
-import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.NotaViewHolder> {
     private List<Nota> listaNotas;
-    private int idUsuarioEstudiante;
-    private OnNotaEditListener onNotaEditListener;
+    private ApiService apiService;
+    private Context context;
+    private int alumnoId;
 
-    public interface OnNotaEditListener {
-        void onNotaEdit(Nota nota, int idUsuarioEstudiante);
-    }
-
-    public NotaAdapterDocente(List<Nota> listaNotas, int idUsuarioEstudiante, OnNotaEditListener onNotaEditListener) {
+    public NotaAdapterDocente(Context context,List<Nota> listaNotas, int alumnoId) {
         this.listaNotas = listaNotas;
-        this.idUsuarioEstudiante = idUsuarioEstudiante;
-        this.onNotaEditListener = onNotaEditListener;
+        this.apiService = ApiCliente.getClient().create(ApiService.class);
+        this.context = context;
+        this.alumnoId = alumnoId;
     }
 
     @NonNull
@@ -40,13 +49,63 @@ public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.
     @Override
     public void onBindViewHolder(@NonNull NotaViewHolder holder, int position) {
         Nota nota = listaNotas.get(position);
-        holder.tvNombreTema.setText("" + (nota.getTema() != null ? nota.getTema() : "Sin Tema"));
-        holder.textNota.setText(String.valueOf(nota.getNota()));
-
-        holder.btnEditarNota.setOnClickListener(v -> {
-            if (onNotaEditListener != null) {
-                onNotaEditListener.onNotaEdit(nota, idUsuarioEstudiante);
+        holder.txtTema.setText(nota.getTema());
+        holder.edtNota.setText(nota.getNota());
+        try {
+            double valorNota = Double.parseDouble(nota.getNota());
+            if (valorNota < 11) {
+                holder.edtNota.setTextColor(Color.RED);
+            } else {
+                holder.edtNota.setTextColor(Color.BLACK);
             }
+        } catch (NumberFormatException e) {
+            holder.edtNota.setTextColor(Color.BLACK);
+        }
+        holder.edtComentario.setText(nota.getComentario());
+
+        holder.btnGuardar.setOnClickListener(v -> {
+            String nuevaNota = holder.edtNota.getText().toString().trim();
+            String nuevoComentario = holder.edtComentario.getText().toString().trim();
+
+            Log.d("NotaAdapterDocente", "Guardando nota: " + nuevaNota + ", comentario: " + nuevoComentario +
+                    ", temaId: " + nota.getIdTema() + ", alumnoId: " + alumnoId);
+
+            if (nuevaNota.isEmpty()) {
+                holder.edtNota.setError("La nota no puede estar vacía");
+                return;
+            }
+            try {
+                double valorNota = Double.parseDouble(nuevaNota);
+                if (valorNota > 20) {
+                    holder.edtNota.setError("La nota no puede ser mayor a 20");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                holder.edtNota.setError("Nota inválida");
+                return;
+            }
+
+            apiService.agregarOEditarNotaConComentario(
+                    alumnoId,
+                    nota.getIdTema(),
+                    nuevaNota,
+                    nuevoComentario
+            ).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(context, "Nota guardada", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Error al guardar nota", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("NotaAdapterDocente", "Fallo al guardar: " + t.getMessage());
+                    Toast.makeText(context, "Fallo de red", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 
@@ -56,14 +115,16 @@ public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.
     }
 
     public static class NotaViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombreTema, textNota;
-        Button btnEditarNota;
+        TextView txtTema;
+        EditText edtNota, edtComentario;
+        Button btnGuardar;
 
         public NotaViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvNombreTema = itemView.findViewById(R.id.tvNombreTema);
-            textNota = itemView.findViewById(R.id.textNota);
-            btnEditarNota = itemView.findViewById(R.id.btnEditarNota);
+            txtTema = itemView.findViewById(R.id.txtTema);
+            edtNota = itemView.findViewById(R.id.edtNota);
+            edtComentario = itemView.findViewById(R.id.edtComentario);
+            btnGuardar = itemView.findViewById(R.id.btnGuardarNota);
         }
     }
 

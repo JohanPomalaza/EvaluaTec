@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="#f0f8ff"
+    android:layout_margin="6dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtTituloSeccion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1° Primaria"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:background="#b3e5fc"
+        android:textColor="#000000"/>
+
+    <LinearLayout
+        android:id="@+id/layoutAlumnos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:background="#ffffff"
+        android:padding="8dp"/>
+</LinearLayout>

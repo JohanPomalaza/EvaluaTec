@@ -4,15 +4,24 @@ import com.google.gson.annotations.SerializedName;
 
 public class Nota {
     private int idNota;
-    private double nota;
+    private String nota;
     private int idUsuarioEstudiante;
     private int idTema;
-
-    @SerializedName("nombre")
+    @SerializedName("tema")
     private String tema;
+
+    public String getTema() {
+        return tema;
+    }
+
+    public void setTema(String tema) {
+        this.tema = tema;
+    }
 
     @SerializedName("rama")
     private String rama;
+    @SerializedName("comentario")
+    private String comentario;
 
     // Getters y Setters
     public int getIdNota() {
@@ -23,22 +32,13 @@ public class Nota {
         this.idNota = idNota;
     }
 
-    public double getNota() {
+    public String getNota() {
         return nota;
     }
 
-    public void setNota(double nota) {
+    public void setNota(String nota) {
         this.nota = nota;
     }
-
-    public String getTema() {
-        return tema;
-    }
-
-    public void setTema(String tema) {
-        this.tema = tema;
-    }
-
     public String getRama() {
         return rama;
     }
@@ -46,7 +46,7 @@ public class Nota {
     public void setRama(String rama) {
         this.rama = rama;
     }
-    public Nota(int idUsuarioEstudiante, int idTema, double nota) {
+    public Nota(int idUsuarioEstudiante, int idTema, String nota) {
         this.idUsuarioEstudiante = idUsuarioEstudiante;
         this.idTema = idTema;
         this.nota = nota;
@@ -67,4 +67,6 @@ public class Nota {
     public void setIdTema(int idTema) {
         this.idTema = idTema;
     }
+    public String getComentario() { return comentario; }
+    public void setComentario(String comentario) { this.comentario = comentario; }
 }

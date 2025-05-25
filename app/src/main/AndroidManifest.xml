@@ -17,6 +17,15 @@
         android:theme="@style/Theme.EvaluaTec"
         tools:targetApi="31">
         <activity
+            android:name=".pantallas.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pantallas.CursosAlumnoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pantallas.SeccionesActivity"
+            android:exported="false" />
+        <activity
             android:name=".pantallas.TemasNotasActivity"
             android:exported="false" />
         <activity
@@ -49,7 +58,6 @@
         <activity
             android:name=".pantallas.fragment_cursos_docente"
             android:exported="false" />
-
     </application>
 
 </manifest>

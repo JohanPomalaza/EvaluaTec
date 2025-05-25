@@ -25,87 +25,44 @@ import retrofit2.Response;
 
 public class TemasNotasActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private NotaAdapterDocente notaAdapterDocente;
-    private List<Nota> listaNotas = new ArrayList<>();
+    private RecyclerView recyclerTemas;
+    private NotaAdapterDocente temasAdapter;
+    private int idRama, alumnoId, anioEscolar;
     private ApiService apiService;
-
-    private int idUsuarioEstudiante;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temas_notas);
 
-        recyclerView = findViewById(R.id.recyclerViewNotas);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerTemas = findViewById(R.id.recyclerViewNotas);
+        recyclerTemas.setLayoutManager(new LinearLayoutManager(this));
 
         apiService = ApiCliente.getClient().create(ApiService.class);
 
-        int usuarioId = getIntent().getIntExtra("usuarioId", 0);
-        int cursoId = getIntent().getIntExtra("cursoId", 0);
-        idUsuarioEstudiante = getIntent().getIntExtra("estudianteId", 0);
+        idRama = getIntent().getIntExtra("idRama", -1);
+        alumnoId = getIntent().getIntExtra("alumnoId", -1);
+        anioEscolar = getIntent().getIntExtra("anioEscolar", -1);
 
-        notaAdapterDocente = new NotaAdapterDocente(listaNotas, idUsuarioEstudiante, this::mostrarDialogoEditarNota);
-        recyclerView.setAdapter(notaAdapterDocente);
 
-        cargarNotas(usuarioId, cursoId, idUsuarioEstudiante);
+        cargarTemas();
     }
-
-    private void mostrarDialogoEditarNota(Nota nota, int idUsuarioEstudiante) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Editar Nota");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        input.setText(String.valueOf(nota.getNota()));
-        builder.setView(input);
-
-        builder.setPositiveButton("Guardar", (dialog, which) -> {
-            double nuevaNota = Double.parseDouble(input.getText().toString());
-            nota.setNota(nuevaNota);
-            notaAdapterDocente.notifyDataSetChanged();
-
-            guardarNotaEnAPI(idUsuarioEstudiante, nota.getIdTema(), (float) nuevaNota);
-        });
-
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
-        builder.show();
-    }
-
-    private void guardarNotaEnAPI(int idUsuarioEstudiante, int idTema, float nuevaNota) {
-        apiService.agregarOEditarNota(idUsuarioEstudiante, idTema, nuevaNota)
-                .enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.isSuccessful()) {
-                            Toast.makeText(TemasNotasActivity.this, "Nota guardada correctamente", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(TemasNotasActivity.this, "Error al guardar nota: " + response.message(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(TemasNotasActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void cargarNotas(int usuarioId, int cursoId, int idUsuarioEstudiante) {
-        apiService.getNotasPorEstudiante(usuarioId, cursoId).enqueue(new Callback<List<NotaEstudiante>>() {
+    private void cargarTemas() {
+        apiService.getNotasPorCurso(alumnoId, idRama, anioEscolar).enqueue(new Callback<List<Nota>>() {
             @Override
-            public void onResponse(Call<List<NotaEstudiante>> call, Response<List<NotaEstudiante>> response) {
+            public void onResponse(Call<List<Nota>> call, Response<List<Nota>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    listaNotas.clear();
-                    listaNotas.addAll(response.body().get(0).getNotas());
-                    notaAdapterDocente.notifyDataSetChanged();
+                    List<Nota> notas = response.body();
+                    temasAdapter = new NotaAdapterDocente(TemasNotasActivity.this, notas, alumnoId);
+                    recyclerTemas.setAdapter(temasAdapter);
+                } else {
+                    Toast.makeText(TemasNotasActivity.this, "No hay temas para este curso", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<NotaEstudiante>> call, Throwable t) {
-                Toast.makeText(TemasNotasActivity.this, "Error al cargar notas", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<List<Nota>> call, Throwable t) {
+                Toast.makeText(TemasNotasActivity.this, "Error al cargar temas: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
