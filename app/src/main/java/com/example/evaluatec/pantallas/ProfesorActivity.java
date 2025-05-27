@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
@@ -15,22 +17,21 @@ import com.example.evaluatec.R;
 
 public class ProfesorActivity extends AppCompatActivity {
     private int usuarioId;
+    private TextView tvWelcome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.fragment_profesor_activity);
+        tvWelcome = findViewById(R.id.tvWelcome);
+        obtenerDatosUsuario();
 
         usuarioId = getIntent().getIntExtra("usuarioId", -1);
         if (usuarioId == -1) {
             finish();
             return;
         }
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
         Button btnSecciones = findViewById(R.id.btnViewSecciones);
         btnSecciones.setOnClickListener(v -> {
             Intent intent = new Intent(ProfesorActivity.this, SeccionesActivity.class);
@@ -39,12 +40,6 @@ public class ProfesorActivity extends AppCompatActivity {
         });
 
 
-        /*Button btnCourses = findViewById(R.id.btnViewCourses);
-        btnCourses.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfesorActivity.this, fragment_cursos_docente.class);
-            intent.putExtra("usuarioId", usuarioId);
-            startActivity(intent);
-        });*/
 
         // Configurar botón de registrar notas
         Button btnRegisterGrades = findViewById(R.id.btnRegisterGrades);
@@ -52,6 +47,19 @@ public class ProfesorActivity extends AppCompatActivity {
             Intent intent = new Intent(ProfesorActivity.this, GradesActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void obtenerDatosUsuario() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            usuarioId = extras.getInt("usuarioId", 0);
+            String nombre = extras != null ? extras.getString("nombre", "Usuario") : "Usuario";
+            String apellido = extras != null ? extras.getString("apellido", "") : "";
+            tvWelcome.setText("Bienvenido " + nombre + " " + apellido);
+        } else {
+            Toast.makeText(this, "Error: Usuario no encontrado", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
 }

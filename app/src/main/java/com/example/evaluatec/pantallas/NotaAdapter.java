@@ -10,13 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evaluatec.R;
 import com.example.evaluatec.modelos.Nota;
+import com.example.evaluatec.modelos.NotaPorCurso;
 
 import java.util.List;
 
 public class NotaAdapter extends RecyclerView.Adapter<NotaAdapter.NotaViewHolder> {
-    private List<Nota> listaNotas;
+    private List<NotaPorCurso> listaNotas;
 
-    public NotaAdapter(List<Nota> listaNotas) {
+    public NotaAdapter(List<NotaPorCurso> listaNotas) {
         this.listaNotas = listaNotas;
     }
     @NonNull
@@ -28,7 +29,7 @@ public class NotaAdapter extends RecyclerView.Adapter<NotaAdapter.NotaViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull NotaViewHolder holder, int position) {
-        Nota nota = listaNotas.get(position);
+        NotaPorCurso nota = listaNotas.get(position);
 
         holder.tvNombreTema.setText("" + (nota.getTema() != null ? nota.getTema() : "Sin Tema"));
         holder.tvNota.setText("Nota: " + String.valueOf(nota.getNota()));
@@ -40,7 +41,7 @@ public class NotaAdapter extends RecyclerView.Adapter<NotaAdapter.NotaViewHolder
         return listaNotas.size();
     }
 
-    public void actualizarLista(List<Nota> nuevasNotas) {
+    public void actualizarLista(List<NotaPorCurso> nuevasNotas) {
         this.listaNotas = nuevasNotas;
         notifyDataSetChanged();
     }

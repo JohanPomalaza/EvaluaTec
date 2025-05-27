@@ -89,6 +89,8 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent;
                     if (login.getRol().equalsIgnoreCase("PROFESOR")) {
                         intent = new Intent(LoginActivity.this, ProfesorActivity.class);
+                        intent.putExtra("nombre", nombre);
+                        intent.putExtra("apellido", apellido);
                     } else {
                         intent = new Intent(LoginActivity.this, EstudianteActivity.class);
                         intent.putExtra("nombre", nombre);

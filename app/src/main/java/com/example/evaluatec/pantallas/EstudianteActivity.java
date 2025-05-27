@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evaluatec.R;
 import com.example.evaluatec.api.ApiCliente;
+import com.example.evaluatec.modelos.NotaPorCurso;
 import com.google.android.material.navigation.NavigationBarView;
 import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.modelos.Curso;
@@ -22,7 +23,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +39,7 @@ import retrofit2.Response;
         private CursoAdapter cursoAdapter;
         private NotaAdapter notaAdapter;
         private List<Curso> listaCursos = new ArrayList<>();
-        private List<Nota> listaNotas = new ArrayList<>();
+        private List<NotaPorCurso> listaNotas = new ArrayList<>();
         private ApiService apiService;
         private int usuarioId;
 
@@ -106,13 +110,24 @@ import retrofit2.Response;
         }
 
         private void cargarCursos() {
-            apiService.getCursosPorUsuario(usuarioId).enqueue(new Callback<List<Curso>>() {
+            apiService.getCursosPorAlumno(usuarioId).enqueue(new Callback<List<Curso>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<Curso>> call, @NonNull Response<List<Curso>> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        listaCursos.clear();
-                        listaCursos.addAll(response.body());
-                        cursoAdapter.notifyDataSetChanged();
+                        List<Curso> cursosOriginales = response.body();
+                        Set<String> nombresCursos = new HashSet<>();
+                        List<Curso> cursosUnicos = new ArrayList<>();
+                        for (Curso curso : cursosOriginales) {
+                            if (!nombresCursos.contains(curso.getNombreCurso())) {
+                                nombresCursos.add(curso.getNombreCurso());
+                                cursosUnicos.add(curso);
+                            }
+                        }
+
+                        CursoAdapter cursoAdapter = new CursoAdapter(cursosUnicos, EstudianteActivity.this::onCursoSelected);
+                        rvCursos.setAdapter(cursoAdapter);
+
+
                     } else {
                         mostrarMensajeError("Error al cargar cursos");
                     }
@@ -130,10 +145,10 @@ import retrofit2.Response;
         }
 
         private void cargarNotas(int idCurso) {
-            apiService.getNotasPorCurso(usuarioId, idCurso).enqueue(new Callback<List<Nota>>() {
+            apiService.getNotasPorCurso(usuarioId, idCurso).enqueue(new Callback<List<NotaPorCurso>>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
-                public void onResponse(@NonNull Call<List<Nota>> call, @NonNull Response<List<Nota>> response) {
+                public void onResponse(@NonNull Call<List<NotaPorCurso>> call, @NonNull Response<List<NotaPorCurso>> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         Log.d("API_RESPONSE", new Gson().toJson(response.body()));
                         listaNotas.clear();
@@ -145,7 +160,7 @@ import retrofit2.Response;
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<List<Nota>> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<List<NotaPorCurso>> call, @NonNull Throwable t) {
                     mostrarMensajeError("Error de conexión");
                 }
             });

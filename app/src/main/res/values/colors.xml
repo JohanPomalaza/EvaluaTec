@@ -7,7 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="light_gray">#D3D3D3</color>
     <color name="primary">#A52A2A</color>
     <color name="gray">#808080</color>
     <color name="dark_text">#212121</color>
@@ -17,6 +16,24 @@
     <color name="light_background">#F5F5F5</color>
     <color name="gradient_start">#2196F3</color>
     <color name="gradient_end">#3F51B5</color>
-    <color name="text_primary">#212121</color>
     <color name="card_background">#FFFFFF</color>
+     <!-- Verde oscuro profesional -->
+    <color name="primary_light">#60AD5E</color>
+    <color name="section_border">#E0E0E0</color>
+    <color name="secondary">#3949AB</color>        <!-- Indigo medio -->
+    <color name="secondary_light">#6F74DD</color>  <!-- Versión clara -->
+    <color name="secondary_dark">#00227B</color>
+
+    <color name="background">#FAFAFA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="divider">#E0E0E0</color>
+
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="light_gray">#F0F0F0</color>
+
+    <color name="success">#388E3C</color>     <!-- Para notas guardadas -->
+    <color name="warning">#FFA000</color>     <!-- Para advertencias (campos vacíos, etc.) -->
+    <color name="error">#D32F2F</color>       <!-- Para errores -->
+    <color name="info">#0288D1</color>
 </resources>

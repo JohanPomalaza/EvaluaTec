@@ -4,6 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Curso {
     private int idCurso;
+
+
+    @SerializedName("nombreCurso")
+    private String curso;
     @SerializedName("curso")
     private String nombreCurso;
     private int idUsuario;
