@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -87,9 +88,11 @@ import retrofit2.Response;
             rvCursos.setAdapter(cursoAdapter);
 
             // Configurar RecyclerView de Notas
-            notaAdapter = new NotaAdapter(listaNotas);
+            notaAdapter = new NotaAdapter(listaNotas, this);
             rvDetalleCursos.setLayoutManager(new LinearLayoutManager(this));
             rvDetalleCursos.setAdapter(notaAdapter);
+
+            rvDetalleCursos.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         }
 
         private void setupApiService() {
@@ -153,7 +156,7 @@ import retrofit2.Response;
                         Log.d("API_RESPONSE", new Gson().toJson(response.body()));
                         listaNotas.clear();
                         listaNotas.addAll(response.body());
-                        notaAdapter.notifyDataSetChanged();
+                        notaAdapter.actualizarLista(listaNotas);
                     } else {
                         mostrarMensajeError("Error al cargar notas");
                     }

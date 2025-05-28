@@ -3,7 +3,6 @@ import com.example.evaluatec.modelos.Alumno;
 import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.Estudiante;
 import com.example.evaluatec.modelos.Nota;
-import com.example.evaluatec.modelos.NotaEstudiante;
 import com.example.evaluatec.modelos.NotaPorCurso;
 import com.example.evaluatec.modelos.Secciones;
 import com.example.evaluatec.modelos.Usuario;
@@ -60,20 +59,7 @@ public interface ApiService {
             @Path("idAnio") int idAnio
     );
     /* ------------------------------- */
-
-    @GET("api/Curso/docente/{id_usuario}/cursos")
-    Call<List<Curso>> getCursosPorDocente(@Path("id_usuario") int id_usuario);
-
-
-
-
-
-    @GET("api/Curso/docente/{id_usuario}/curso/{id_curso}/estudiantes")
-    Call<List<Estudiante>> getEstudiantesPorCurso(@Path("id_usuario") int usuarioId, @Path("id_curso") int cursoId);
-
-
-
-
+    /*REGISTRO DE NOTAS Y COMENTARIOS*/
     @POST("api/Curso/notas/comentario")
     Call<ResponseBody> agregarOEditarNotaConComentario(
             @Query("id_usuario_estudiante") int idUsuarioEstudiante,
@@ -81,4 +67,18 @@ public interface ApiService {
             @Query("nota") String nota,
             @Query("comentario") String comentario
     );
+
+    /* ------------------------------- */
+
+
+    @GET("api/Curso/docente/{id_usuario}/cursos")
+    Call<List<Curso>> getCursosPorDocente(@Path("id_usuario") int id_usuario);
+
+    @GET("api/Curso/docente/{id_usuario}/curso/{id_curso}/estudiantes")
+    Call<List<Estudiante>> getEstudiantesPorCurso(@Path("id_usuario") int usuarioId, @Path("id_curso") int cursoId);
+
+
+
+
+
 }

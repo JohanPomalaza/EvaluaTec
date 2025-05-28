@@ -1,64 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
+    android:id="@+id/cardView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/white">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:stateListAnimator="@animator/card_elevation">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="?attr/selectableItemBackground">
+        android:padding="16dp">
 
-        <!-- Tema principal -->
-        <TextView
-            android:id="@+id/tvNombreTema"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nombre del Tema"
-            android:textSize="18sp"
-            android:textColor="@color/text_primary" />
-
-        <!-- Nota -->
-        <TextView
-            android:id="@+id/tvNota"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nota: 17.5"
-            android:textSize="16sp"
-            android:textColor="@color/primary"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"/>
-
-        <!-- Rama -->
+        <!-- Header con información principal -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:orientation="vertical">
+
+            <!-- Tema principal con chip de estado -->
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipEstado"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aprobado"
+                    app:chipBackgroundColor="@color/green_light"
+                    android:textColor="@color/green_dark"/>
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Tema principal -->
+            <TextView
+                android:id="@+id/tvNombreTema"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del Tema"
+                android:textSize="18sp"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="4sp"/>
+
+            <!-- Contenedor de nota y progreso -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical">
+
+                <!-- Nota circular -->
+                <RelativeLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/circle_background_primary_light">
+
+                    <TextView
+                        android:id="@+id/tvNota"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="17.5"
+                        android:textSize="16sp"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:layout_centerInParent="true"/>
+                </RelativeLayout>
+
+                <!-- Barra de progreso -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Progreso"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginBottom="4dp"/>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        app:trackColor="@color/gray_light"
+                        app:indicatorColor="@color/primary"
+                        app:trackCornerRadius="3dp"
+                        android:progress="75"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Rama con icono -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_category"
+                    app:tint="@color/text_secondary"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvNombreRama"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre de la Rama"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"/>
+            </LinearLayout>
+
+            <!-- Botón para mostrar/ocultar comentario -->
+            <LinearLayout
+                android:id="@+id/btnToggleComentario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:paddingVertical="8dp"
+                android:background="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/ivArrow"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_arrow_down"
+                    app:tint="@color/primary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ver comentario del profesor"
+                    android:textSize="14sp"
+                    android:textColor="@color/primary"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Contenedor del comentario (inicialmente oculto) -->
+        <LinearLayout
+            android:id="@+id/containerComentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingTop="16dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/divider_gradient"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rama:"
-                android:textSize="14sp"
-                android:textColor="@color/text_secondary"/>
+                android:text="COMENTARIO"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:letterSpacing="0.1"
+                android:textAllCaps="true"/>
 
             <TextView
-                android:id="@+id/tvNombreRama"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvComentario"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nombre de la Rama"
+                android:text="Este es un comentario detallado del profesor sobre tu desempeño en este tema. Puede incluir observaciones, sugerencias y recomendaciones para mejorar."
                 android:textSize="14sp"
                 android:textColor="@color/text_primary"
-                android:layout_marginStart="8dp"/>
+                android:lineSpacingExtra="4sp"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

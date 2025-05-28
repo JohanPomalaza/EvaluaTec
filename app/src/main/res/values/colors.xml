@@ -18,19 +18,24 @@
     <color name="gradient_end">#3F51B5</color>
     <color name="card_background">#FFFFFF</color>
      <!-- Verde oscuro profesional -->
-    <color name="primary_light">#60AD5E</color>
+    <color name="primary_light">#F1E6FF</color>
     <color name="section_border">#E0E0E0</color>
     <color name="secondary">#3949AB</color>        <!-- Indigo medio -->
     <color name="secondary_light">#6F74DD</color>  <!-- Versión clara -->
     <color name="secondary_dark">#00227B</color>
-
+    <color name="green_light">#E8F5E9</color>
+    <color name="green_dark">#2E7D32</color>
+    <color name="gray_light">#EEEEEE</color>
+    <color name="red_light">#FFEBEE</color>
+    <color name="red_dark">#C62828</color>
     <color name="background">#FAFAFA</color>
     <color name="surface">#FFFFFF</color>
     <color name="divider">#E0E0E0</color>
 
     <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
     <color name="light_gray">#F0F0F0</color>
+    <color name="divider_color">#1F000000</color>
+    <color name="text_secondary">#8A000000</color>
 
     <color name="success">#388E3C</color>     <!-- Para notas guardadas -->
     <color name="warning">#FFA000</color>     <!-- Para advertencias (campos vacíos, etc.) -->
