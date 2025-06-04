@@ -24,7 +24,7 @@
             android:layout_gravity="start"
             android:layout_marginBottom="8dp"
             android:src="@drawable/ic_folder"
-            app:tint="@color/primary"/>
+            app:tint="@color/primary_dark"/>
 
         <!-- Nombre del curso -->
         <TextView

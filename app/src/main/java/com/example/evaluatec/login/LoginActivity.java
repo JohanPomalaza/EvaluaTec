@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import com.example.evaluatec.pantallas.AdministradorActivity;
 import com.example.evaluatec.R;
 import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.api.LoginResponse;
@@ -28,8 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 //aqui se crean las variables a usar para el login, junto con la variable para la conexion
     private EditText usernameField;
     private EditText passwordField;
-    private ImageButton loginButton;
-    private Button registerButton;
+    private Button loginButton;
     private ApiService apiService; // Retrofit service
 
     @Override
@@ -41,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
         usernameField = findViewById(R.id.usernameField);
         passwordField = findViewById(R.id.passwordField);
         loginButton = findViewById(R.id.loginButton);
-        registerButton = findViewById(R.id.registerButton);
 
         ConstraintLayout layout = findViewById(R.id.constraintLayout);
         ConstraintSet constraintSet = new ConstraintSet();
@@ -59,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
         apiService = retrofit.create(ApiService.class);
 
         loginButton.setOnClickListener(view -> handleLogin());
-        registerButton.setOnClickListener(view -> handleRegister());
     }
 
     private void handleLogin() {
@@ -91,8 +88,12 @@ public class LoginActivity extends AppCompatActivity {
                         intent = new Intent(LoginActivity.this, ProfesorActivity.class);
                         intent.putExtra("nombre", nombre);
                         intent.putExtra("apellido", apellido);
-                    } else {
+                    } else if (login.getRol().equalsIgnoreCase("ESTUDIANTE")) {
                         intent = new Intent(LoginActivity.this, EstudianteActivity.class);
+                        intent.putExtra("nombre", nombre);
+                        intent.putExtra("apellido", apellido);
+                    }else{
+                        intent = new Intent(LoginActivity.this, AdministradorActivity.class);
                         intent.putExtra("nombre", nombre);
                         intent.putExtra("apellido", apellido);
                     }

@@ -2,13 +2,11 @@ package com.example.evaluatec.modelos;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Curso {
+public class CursoMantenimiento {
+
     private int idCurso;
 
-
     @SerializedName("nombreCurso")
-    private String curso;
-    @SerializedName("curso")
     private String nombreCurso;
     private int idUsuario;
 
@@ -28,6 +26,9 @@ public class Curso {
     }
     public void setNombreCurso(String nombreCurso) {
         this.nombreCurso = nombreCurso;
+    }
+    public void setIdCurso(int idCurso) {
+        this.idCurso = idCurso;
     }
 
     public int getIdUsuario() {return idUsuario;}

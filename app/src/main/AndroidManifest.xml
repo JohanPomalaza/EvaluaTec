@@ -16,7 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EvaluaTec"
         tools:targetApi="31">
-
+        <activity
+            android:name=".pantallas.RamasTemasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pantallas.EstudiantesMantenimientoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pantallas.CursoMantenimientoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pantallas.AdministradorActivity"
+            android:exported="false" />
         <activity
             android:name=".pantallas.CursosAlumnoActivity"
             android:exported="false" />
