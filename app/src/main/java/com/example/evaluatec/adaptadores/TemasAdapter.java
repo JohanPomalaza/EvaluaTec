@@ -1,32 +1,32 @@
 package com.example.evaluatec.adaptadores;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evaluatec.R;
-import com.example.evaluatec.modelos.TemaCurso;
+import com.example.evaluatec.modelos.TemaEditarDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHolder> {
-    private List<TemaCurso> listaTemas;
+    private List<TemaEditarDTO> listaTemas;
     private final OnTemaActionListener listener;
 
-    // Interfaz para manejar eventos de edición y eliminación
     public interface OnTemaActionListener {
-        void onEditarTema(TemaCurso tema);
-        void onEliminarTema(TemaCurso tema);
+        void onEditarTema(TemaEditarDTO tema);
+        void onEliminarTema(TemaEditarDTO tema);
     }
 
-    // Constructor
-    public TemasAdapter(List<TemaCurso> listaTemas, OnTemaActionListener listener) {
+    public TemasAdapter(List<TemaEditarDTO> listaTemas, OnTemaActionListener listener) {
         this.listaTemas = listaTemas != null ? listaTemas : new ArrayList<>();
         this.listener = listener;
     }
@@ -40,16 +40,11 @@ public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TemaViewHolder holder, int position) {
-        TemaCurso tema = listaTemas.get(position);
+        TemaEditarDTO tema = listaTemas.get(position);
         holder.txtNombre.setText(tema.getNombre());
 
-        holder.btnEditar.setOnClickListener(v -> {
-            if (listener != null) listener.onEditarTema(tema);
-        });
-
-        holder.btnEliminar.setOnClickListener(v -> {
-            if (listener != null) listener.onEliminarTema(tema);
-        });
+        holder.btnEditar.setOnClickListener(v -> listener.onEditarTema(tema));
+        holder.btnEliminar.setOnClickListener(v -> listener.onEliminarTema(tema));
     }
 
     @Override
@@ -57,7 +52,6 @@ public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHold
         return listaTemas != null ? listaTemas.size() : 0;
     }
 
-    // ViewHolder
     public static class TemaViewHolder extends RecyclerView.ViewHolder {
         TextView txtNombre;
         ImageButton btnEditar, btnEliminar;
@@ -68,11 +62,5 @@ public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHold
             btnEditar = itemView.findViewById(R.id.btnEditarTema);
             btnEliminar = itemView.findViewById(R.id.btnEliminarTema);
         }
-    }
-
-
-    public void actualizarLista(List<TemaCurso> nuevaLista) {
-        this.listaTemas = nuevaLista != null ? nuevaLista : new ArrayList<>();
-        notifyDataSetChanged();
     }
 }

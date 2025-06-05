@@ -22,7 +22,9 @@ public class Curso {
     public int getIdCurso() {
         return idCurso;
     }
-
+    public void setIdCurso(int idCurso) {
+        this.idCurso = idCurso;
+    }
     public String getNombreCurso() {
         return nombreCurso;
     }

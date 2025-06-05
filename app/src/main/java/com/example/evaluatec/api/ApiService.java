@@ -8,6 +8,7 @@ import com.example.evaluatec.modelos.NotaPorCurso;
 import com.example.evaluatec.modelos.RamaCurso;
 import com.example.evaluatec.modelos.Secciones;
 import com.example.evaluatec.modelos.TemaCurso;
+import com.example.evaluatec.modelos.TemaEditarDTO;
 import com.example.evaluatec.modelos.Usuario;
 
 import java.util.List;
@@ -116,8 +117,7 @@ public interface ApiService {
     Call<TemaCurso> crearTema(@Body TemaCurso tema);
 
     @PUT("api/TemasCurso/{id}")
-    Call<Void> editarTema(@Path("id") int id, @Body TemaCurso tema);
-
+    Call<Void> editarTema(@Path("id") int idTema, @Body TemaEditarDTO tema);
     @DELETE("api/TemasCurso/{id}")
     Call<Void> eliminarTema(@Path("id") int id);
     /* ------------------------------- */

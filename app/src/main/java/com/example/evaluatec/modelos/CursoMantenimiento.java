@@ -3,7 +3,7 @@ package com.example.evaluatec.modelos;
 import com.google.gson.annotations.SerializedName;
 
 public class CursoMantenimiento {
-
+    @SerializedName("idCurso")
     private int idCurso;
 
     @SerializedName("nombreCurso")

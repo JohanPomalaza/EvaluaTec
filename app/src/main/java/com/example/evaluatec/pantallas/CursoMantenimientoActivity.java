@@ -62,6 +62,7 @@ public class CursoMantenimientoActivity extends AppCompatActivity {
             public void onVerRamasYTemas(CursoMantenimiento cursoMante) {
                 Intent intent = new Intent(CursoMantenimientoActivity.this, RamasTemasActivity.class);
                 intent.putExtra("cursoId", cursoMante.getIdCurso());
+                intent.putExtra("cursoNombre", cursoMante.getNombreCurso());
                 startActivity(intent);
             }
         });
