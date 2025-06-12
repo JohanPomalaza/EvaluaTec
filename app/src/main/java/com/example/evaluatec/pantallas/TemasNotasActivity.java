@@ -27,7 +27,7 @@ public class TemasNotasActivity extends AppCompatActivity {
 
     private RecyclerView recyclerTemas;
     private NotaAdapterDocente temasAdapter;
-    private int idRama, alumnoId, anioEscolar;
+    private int idRama, alumnoId, anioEscolar, notaId, usuarioId;
     private ApiService apiService;
 
     @Override
@@ -43,6 +43,8 @@ public class TemasNotasActivity extends AppCompatActivity {
         idRama = getIntent().getIntExtra("idRama", -1);
         alumnoId = getIntent().getIntExtra("alumnoId", -1);
         anioEscolar = getIntent().getIntExtra("anioEscolar", -1);
+        notaId = getIntent().getIntExtra("notaId", -1);
+        usuarioId = getIntent().getIntExtra("usuarioId", -1);
 
 
         cargarTemas();
@@ -53,8 +55,9 @@ public class TemasNotasActivity extends AppCompatActivity {
             public void onResponse(Call<List<Nota>> call, Response<List<Nota>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Nota> notas = response.body();
-                    temasAdapter = new NotaAdapterDocente(TemasNotasActivity.this, notas, alumnoId);
+                    temasAdapter = new NotaAdapterDocente(TemasNotasActivity.this, notas, alumnoId,usuarioId);
                     recyclerTemas.setAdapter(temasAdapter);
+
                 } else {
                     Toast.makeText(TemasNotasActivity.this, "No hay temas para este curso", Toast.LENGTH_SHORT).show();
                 }

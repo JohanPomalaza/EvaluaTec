@@ -11,5 +11,14 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_logo">Logo</string>
+    <string name="select_login_method">Selecciona tu tipo de Sesion</string>
+    <string name="student">ESTUDIANTE</string>
+    <string name="teacher">PROFESOR</string>
+    <string name="administrator">ADMINISTRADOR</string>
+    <string name="select_option_to_continue">ESCOGE UNO</string>
+    <string name="app_version">1.0.1</string>
+    <string name="student_button_desc">Login as Student</string>
+    <string name="teacher_button_desc">Login as Teacher</string>
+    <string name="admin_button_desc">Login as Administrator</string>
 </resources>

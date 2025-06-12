@@ -45,7 +45,7 @@ public class SeccionesActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Secciones>> call, Response<List<Secciones>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    seccionesAdapter = new SeccionesAdapter(SeccionesActivity.this, response.body());
+                    seccionesAdapter = new SeccionesAdapter(SeccionesActivity.this, response.body(), usuarioId);
                     recyclerSecciones.setAdapter(seccionesAdapter);
                 } else {
                     Toast.makeText(SeccionesActivity.this, "No se encontraron secciones", Toast.LENGTH_SHORT).show();

@@ -3,6 +3,7 @@ import com.example.evaluatec.modelos.Alumno;
 import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.CursoMantenimiento;
 import com.example.evaluatec.modelos.Estudiante;
+import com.example.evaluatec.modelos.HistorialNota;
 import com.example.evaluatec.modelos.Nota;
 import com.example.evaluatec.modelos.NotaPorCurso;
 import com.example.evaluatec.modelos.RamaCurso;
@@ -69,11 +70,15 @@ public interface ApiService {
     @POST("api/Curso/notas/comentario")
     Call<ResponseBody> agregarOEditarNotaConComentario(
             @Query("id_usuario_estudiante") int idUsuarioEstudiante,
+            @Query("id_usuario_docente") int idUsuarioDocente,
             @Query("id_tema") int idTema,
             @Query("nota") String nota,
             @Query("comentario") String comentario
     );
-
+    @GET("api/Curso/notas/historial")
+    Call<List<HistorialNota>> obtenerHistorialNota(
+            @Query("idNota") int idNota
+    );
     /* ------------------------------- */
 
     /*CRUD PARA CURSOS*/

@@ -33,13 +33,15 @@ import retrofit2.Response;
 public class SeccionesAdapter extends RecyclerView.Adapter<SeccionesAdapter.ViewHolder>{
     private List<Secciones> listaSecciones;
     private ApiService apiService;
+    private int usuarioId;
 
     private Context context;
 
-    public SeccionesAdapter(Context context, List<Secciones> listaSecciones) {
+    public SeccionesAdapter(Context context, List<Secciones> listaSecciones, int usuarioId) {
         this.listaSecciones = listaSecciones;
         this.apiService = ApiCliente.getClient().create(ApiService.class);
         this.context = context;
+        this.usuarioId = usuarioId;
     }
 
     @NonNull
@@ -115,6 +117,7 @@ public class SeccionesAdapter extends RecyclerView.Adapter<SeccionesAdapter.View
                                 Intent intent = new Intent(holder.layoutAlumnos.getContext(), CursosAlumnoActivity.class);
                                 intent.putExtra("alumnoId", alumno.getIdUsuarioEstudiante());
                                 intent.putExtra("anioEscolar", idAnio);
+                                intent.putExtra("usuarioId", usuarioId);
                                 holder.layoutAlumnos.getContext().startActivity(intent);
                             });
 

@@ -46,6 +46,7 @@ public class CursosAlumnoActivity extends AppCompatActivity {
 
         int alumnoId = getIntent().getIntExtra("alumnoId", 0);
         int anioEscolar = getIntent().getIntExtra("anioEscolar", 0);
+        int usuarioId = getIntent().getIntExtra("usuarioId", 0);
 
         apiService.getCursosPorAlumno(alumnoId).enqueue(new Callback<List<Curso>>() {
             @Override
@@ -61,7 +62,7 @@ public class CursosAlumnoActivity extends AppCompatActivity {
                             cursosUnicos.add(curso);
                         }
                     }
-                    CursoAlumnoAdapter cursoAlumnoAdapter = new CursoAlumnoAdapter(cursosUnicos, alumnoId, anioEscolar);
+                    CursoAlumnoAdapter cursoAlumnoAdapter = new CursoAlumnoAdapter(cursosUnicos, alumnoId, anioEscolar, usuarioId);
                     recyclerView.setAdapter(cursoAlumnoAdapter);
                 }
             }

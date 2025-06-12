@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="12dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="12dp"
-    android:background="@color/white">
+    app:cardElevation="6dp"
+    app:cardCornerRadius="16dp"
+    app:strokeColor="@color/primary"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,7 +27,7 @@
             android:textColor="#212121"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Nota Editable -->
         <EditText
@@ -40,9 +42,9 @@
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/txtTema"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/edtComentario"
-            app:layout_constraintWidth_percent="0.4"
-            android:layout_marginTop="12dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"
+            app:layout_constraintWidth_percent="1" />
 
         <!-- Comentario Editable -->
         <EditText
@@ -55,27 +57,44 @@
             android:padding="12dp"
             android:textColor="#212121"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/txtTema"
-            app:layout_constraintStart_toEndOf="@id/edtNota"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.55"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/edtNota"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Botón Guardar -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardarNota"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Guardar"
-            android:backgroundTint="@color/primary"
+            android:icon="@drawable/ic_save"
+            app:iconPadding="8dp"
             android:textColor="@android:color/white"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="10dp"
+            app:backgroundTint="@color/primary"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/edtNota"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/edtComentario"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnHistorial"
+            app:layout_constraintWidth_percent="0.48" />
+
+        <!-- Botón Ver Historial -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHistorial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Historial"
+            android:icon="@drawable/ic_history"
+            app:iconPadding="8dp"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/secondary"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/edtComentario"
+            app:layout_constraintStart_toEndOf="@id/btnGuardarNota"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.48"
+            android:layout_marginStart="8dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

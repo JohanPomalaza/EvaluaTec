@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class NotaPorCurso {
 
+    @SerializedName("idNota")
     private int idNota;
+    @SerializedName("nota")
     private String nota;
     private int idUsuarioEstudiante;
     private int idTema;

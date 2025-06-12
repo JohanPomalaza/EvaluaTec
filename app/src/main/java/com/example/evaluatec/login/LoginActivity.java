@@ -1,14 +1,17 @@
 package com.example.evaluatec.login;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 
 import com.example.evaluatec.pantallas.AdministradorActivity;
 import com.example.evaluatec.R;
@@ -17,6 +20,7 @@ import com.example.evaluatec.api.LoginResponse;
 import com.example.evaluatec.modelos.Usuario;
 import com.example.evaluatec.pantallas.EstudianteActivity;
 import com.example.evaluatec.pantallas.ProfesorActivity;
+import com.google.android.material.textfield.TextInputLayout;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +33,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText usernameField;
     private EditText passwordField;
     private Button loginButton;
-    private ApiService apiService; // Retrofit service
+    private ApiService apiService;
+
+    String tipoUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,30 +47,60 @@ public class LoginActivity extends AppCompatActivity {
         passwordField = findViewById(R.id.passwordField);
         loginButton = findViewById(R.id.loginButton);
 
+        tipoUsuario = getIntent().getStringExtra("tipoUsuario");
+
+        if(tipoUsuario == null){
+            tipoUsuario = "ESTUDIANTE";
+        }
+
+
+        TextView title = findViewById(R.id.titleLogin);
+        TextInputLayout usernameLayout = findViewById(R.id.username_layout);
+        TextInputLayout passwordLayout = findViewById(R.id.password_layout);
+
+        int color;
+        switch (tipoUsuario.toUpperCase()) {
+            case "PROFESOR":
+                color = ContextCompat.getColor(this, R.color.red_dark);
+                break;
+            case "ADMINISTRADOR":
+                color = ContextCompat.getColor(this, R.color.green_dark);
+                break;
+            default:
+                color = ContextCompat.getColor(this, R.color.blue_primary);
+                break;
+        }
+
+        title.setTextColor(color);
+        usernameLayout.setBoxStrokeColor(color);
+        passwordLayout.setBoxStrokeColor(color);
+        loginButton.setBackgroundTintList(ColorStateList.valueOf(color));
+        ((TextView) findViewById(R.id.forgot_password)).setTextColor(color);
+
+
         ConstraintLayout layout = findViewById(R.id.constraintLayout);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(layout);
 
         constraintSet.setVerticalBias(R.id.titleLogin, 0.4f);
         constraintSet.applyTo(layout);
+
         String baseUrl = "http://10.0.2.2:5262/";
-        // Inicializa Retrofit
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl) // Accede a tu API desde el emulador
+                .baseUrl("http://10.0.2.2:5262/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         apiService = retrofit.create(ApiService.class);
 
-        loginButton.setOnClickListener(view -> handleLogin());
+        loginButton.setOnClickListener(v -> handleLogin(tipoUsuario));
     }
 
-    private void handleLogin() {
+    private void handleLogin(String tipoUsuario) {
         String correo = usernameField.getText().toString();
         String contrasena = passwordField.getText().toString();
 
         if (correo.isEmpty() || contrasena.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Debe ingresar el correo", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -76,6 +112,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     LoginResponse login = response.body();
+                    if (!login.getRol().equalsIgnoreCase(tipoUsuario)) {
+                        Toast.makeText(LoginActivity.this, "Rol incorrecto", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     String rol = login.getRol();
                     String nombre = login.getNombre();
                     String apellido = login.getApellido();
@@ -92,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                         intent = new Intent(LoginActivity.this, EstudianteActivity.class);
                         intent.putExtra("nombre", nombre);
                         intent.putExtra("apellido", apellido);
-                    }else{
+                    }else {
                         intent = new Intent(LoginActivity.this, AdministradorActivity.class);
                         intent.putExtra("nombre", nombre);
                         intent.putExtra("apellido", apellido);

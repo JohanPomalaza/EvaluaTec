@@ -21,13 +21,14 @@ import java.util.List;
 
 public class CursoAlumnoAdapter extends RecyclerView.Adapter<CursoAlumnoAdapter.ViewHolder> {
     private List<Curso> listaCursos;
-    private int alumnoId, anioEscolar;
+    private int alumnoId, anioEscolar, usuarioId;
     private ApiService apiService;
 
-    public CursoAlumnoAdapter(List<Curso> listaCursos, int alumnoId, int anioEscolar) {
+    public CursoAlumnoAdapter(List<Curso> listaCursos, int alumnoId, int anioEscolar, int usuarioId) {
         this.listaCursos = listaCursos;
         this.alumnoId = alumnoId;
         this.anioEscolar = anioEscolar;
+        this.usuarioId = usuarioId;
         this.apiService = ApiCliente.getClient().create(ApiService.class);
     }
     @NonNull
@@ -46,6 +47,7 @@ public class CursoAlumnoAdapter extends RecyclerView.Adapter<CursoAlumnoAdapter.
             intent.putExtra("alumnoId", alumnoId);
             intent.putExtra("idRama", curso.getIdRama());
             intent.putExtra("anioEscolar", anioEscolar);
+            intent.putExtra("usuarioId", usuarioId);
             v.getContext().startActivity(intent);
         });
         }

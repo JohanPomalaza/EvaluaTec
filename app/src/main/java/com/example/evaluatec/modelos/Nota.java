@@ -3,10 +3,14 @@ package com.example.evaluatec.modelos;
 import com.google.gson.annotations.SerializedName;
 
 public class Nota {
+    @SerializedName("idNota")
     private int idNota;
+    @SerializedName("nota")
     private String nota;
     private int idUsuarioEstudiante;
     private int idTema;
+
+    private int idUsuarioDocente;
 
     @SerializedName("tema")
     private String tema;
@@ -47,10 +51,11 @@ public class Nota {
     public void setRama(String rama) {
         this.rama = rama;
     }
-    public Nota(int idUsuarioEstudiante, int idTema, String nota) {
+    public Nota(int idUsuarioEstudiante, int idTema, String nota, int idUsuarioDocente) {
         this.idUsuarioEstudiante = idUsuarioEstudiante;
         this.idTema = idTema;
         this.nota = nota;
+        this.idUsuarioDocente = idUsuarioDocente;
     }
 
     public int getIdUsuarioEstudiante() {
@@ -59,6 +64,14 @@ public class Nota {
 
     public void setIdUsuarioEstudiante(int idUsuarioEstudiante) {
         this.idUsuarioEstudiante = idUsuarioEstudiante;
+    }
+
+    public int getIdUsuarioDocente() {
+        return idUsuarioDocente;
+    }
+
+    public void setIdUsuarioDocente(int idUsuarioDocente) {
+        this.idUsuarioDocente = idUsuarioDocente;
     }
 
     public int getIdTema() {
