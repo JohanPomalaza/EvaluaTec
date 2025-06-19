@@ -1,18 +1,28 @@
 package com.example.evaluatec.pantallas;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,8 +33,13 @@ import com.example.evaluatec.api.ApiCliente;
 import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.CursoMantenimiento;
+import com.example.evaluatec.modelos.HistorialCurso;
+import com.example.evaluatec.modelos.HistorialRama;
 import com.example.evaluatec.modelos.RamaCurso;
+import com.example.evaluatec.modelos.RamaCursoCrearDTO;
+import com.example.evaluatec.modelos.RamaEditarDto;
 import com.example.evaluatec.modelos.RamaMantenimiento;
+import com.example.evaluatec.modelos.TemaCrearDTO;
 import com.example.evaluatec.modelos.TemaCurso;
 import com.example.evaluatec.modelos.TemaEditarDTO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,12 +61,14 @@ public class RamasTemasActivity extends AppCompatActivity {
     private TemasAdapter temasAdapter;
 
     private List<RamaCurso> listaRamas = new ArrayList<>();
-    private List<TemaEditarDTO> listaTemas = new ArrayList<>();
+    private List<TemaCurso> listaTemas = new ArrayList<>();
 
     private ApiService apiService;
     private int cursoId;
     private String cursoNombre;
     private RamaCurso ramaSeleccionada;
+    private int usuarioId;
+    private int gradoSeleccionado = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +86,18 @@ public class RamasTemasActivity extends AppCompatActivity {
         apiService = ApiCliente.getClient().create(ApiService.class);
         cursoId = getIntent().getIntExtra("cursoId", 0);
         cursoNombre = getIntent().getStringExtra("cursoNombre");
+        usuarioId = getIntent().getIntExtra("usuarioId", 0);
 
         // Adaptadores
         ramasAdapter = new RamasAdapter(listaRamas, new RamasAdapter.OnRamaListener() {
             @Override
             public void onEditar(RamaCurso rama) {
-                onEditarRama(rama);
+                onEditarRama(rama, usuarioId);
             }
 
             @Override
             public void onEliminar(RamaCurso rama) {
-                // Por implemntar
+                onEliminarRama(rama, usuarioId);
             }
 
             @Override
@@ -87,17 +105,22 @@ public class RamasTemasActivity extends AppCompatActivity {
                 ramaSeleccionada = rama;
                 mostrarTemasDeRama(rama.getIdRama());
             }
+
+            @Override
+            public void onVerHistorialRamas(RamaCurso rama) {
+                verHistorialRama(rama, usuarioId);
+            }
         });
 
         temasAdapter = new TemasAdapter(listaTemas, new TemasAdapter.OnTemaActionListener() {
             @Override
-            public void onEditarTema(TemaEditarDTO tema) {
-                EditarTema(tema);
+            public void onEditarTema(TemaCurso tema) {
+                EditarTema(tema, usuarioId);
             }
 
             @Override
-            public void onEliminarTema(TemaEditarDTO tema) {
-                // lógica para eliminar tema
+            public void onEliminarTema(TemaCurso tema) {
+                 EliminarTema(tema, usuarioId);
             }
         });
 
@@ -147,15 +170,28 @@ public class RamasTemasActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     listaTemas.clear();
 
-                    for (TemaCurso tema : response.body()) {
-                        TemaEditarDTO dto = new TemaEditarDTO();
-                        dto.setIdTema(tema.getIdTema());
-                        dto.setNombre(tema.getNombre());
-                        dto.setIdRama(tema.getIdRama());
-                        listaTemas.add(dto);
+                    List<TemaCurso> temas = response.body();
+                    listaTemas.addAll(temas);
+                    temasAdapter.notifyDataSetChanged();
+
+                    if (!temas.isEmpty()) {
+                        TemaCurso primerTema = temas.get(0);
+
+                        if (primerTema.getGrado() != null && primerTema.getGrado().getIdGrado() > 0) {
+                            gradoSeleccionado = primerTema.getGrado().getIdGrado();
+                            Log.d("API_DEBUG", "Grado seleccionado: " + gradoSeleccionado);
+                        } else if (primerTema.getIdGrado() > 0) {
+                            // Si no tiene objeto Grado pero tiene idGrado suelto
+                            gradoSeleccionado = primerTema.getIdGrado();
+                            Log.d("API_DEBUG", "Grado seleccionado (id suelto): " + gradoSeleccionado);
+                        } else {
+                            Log.d("API_DEBUG", "Grado no disponible en el primer tema");
+                        }
+
+                    } else {
+                        Log.d("API_DEBUG", "No hay temas para este idRama");
                     }
 
-                    temasAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(RamasTemasActivity.this, "Error al obtener temas", Toast.LENGTH_SHORT).show();
                 }
@@ -172,99 +208,54 @@ public class RamasTemasActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Nueva Rama");
 
-        final EditText input = new EditText(this);
-        input.setHint("Nombre de la rama");
-        builder.setView(input);
+        View view = getLayoutInflater().inflate(R.layout.dialog_nueva_rama, null);
+        final EditText input = view.findViewById(R.id.edtNombreRama);
+
+        builder.setView(view);
 
         builder.setPositiveButton("Guardar", (dialog, which) -> {
             String nombre = input.getText().toString().trim();
             if (!nombre.isEmpty()) {
-                RamaCurso nueva = new RamaCurso();
-                nueva.setNombreRama(nombre);
-                nueva.setIdCurso(cursoId);
+                // Aquí usas el DTO limpio
+                RamaCursoCrearDTO nueva = new RamaCursoCrearDTO(cursoId, usuarioId, nombre);
+                Log.d("API_DEBUG", "Enviando: " + nueva.toString());
 
-                apiService.crearRama(nueva).enqueue(new Callback<RamaCurso>() {
+                apiService.crearRama(nueva).enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<RamaCurso> call, Response<RamaCurso> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
                             cargarRamas();
                             Toast.makeText(RamasTemasActivity.this, "Rama agregada", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(RamasTemasActivity.this, "Error al guardar", Toast.LENGTH_SHORT).show();
+                            Log.e("API_DEBUG", "Respuesta error: " + response.code());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<RamaCurso> call, Throwable t) {
-                        Toast.makeText(RamasTemasActivity.this, "Error al guardar", Toast.LENGTH_SHORT).show();
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(RamasTemasActivity.this, "Error de red", Toast.LENGTH_SHORT).show();
+                        Log.e("API_DEBUG", "Error de red: " + t.getMessage(), t);
                     }
                 });
-            }
-        });
-
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
-        builder.show();
-    }
-
-    private void mostrarDialogoCrearTema() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Nuevo Tema");
-
-        final EditText input = new EditText(this);
-        input.setHint("Nombre del tema");
-        builder.setView(input);
-
-        builder.setPositiveButton("Guardar", (dialog, which) -> {
-            String nombreTema = input.getText().toString().trim();
-            if (!nombreTema.isEmpty()) {
-                TemaCurso nuevoTema = new TemaCurso();
-                nuevoTema.setNombre(nombreTema);
-                nuevoTema.setIdRama(ramaSeleccionada.getIdRama());
-                crearTema(nuevoTema);
             } else {
-                Toast.makeText(this, "Ingresa un nombre válido", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RamasTemasActivity.this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show();
             }
         });
 
         builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+
         builder.show();
     }
 
-    private void crearTema(TemaCurso tema) {
-        apiService.crearTema(tema).enqueue(new Callback<TemaCurso>() {
-            @Override
-            public void onResponse(Call<TemaCurso> call, Response<TemaCurso> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    TemaCurso creado = response.body();
-
-                    TemaEditarDTO dto = new TemaEditarDTO();
-                    dto.setIdTema(creado.getIdTema());
-                    dto.setNombre(creado.getNombre());
-                    dto.setIdRama(creado.getIdRama());
-
-                    listaTemas.add(dto);
-                    temasAdapter.notifyItemInserted(listaTemas.size() - 1);
-                    Toast.makeText(RamasTemasActivity.this, "Tema agregado", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(RamasTemasActivity.this, "Error al agregar tema", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TemaCurso> call, Throwable t) {
-                Toast.makeText(RamasTemasActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void onEditarRama(RamaCurso rama) {
+    private void onEditarRama(RamaCurso rama, int idUsuario) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Editar Rama");
 
-        // Crear un contenedor para el EditText
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(50, 40, 50, 10); // Margen interno para mejor apariencia
+        layout.setPadding(50, 40, 50, 10);
 
-        // Crear el EditText
         final EditText input = new EditText(this);
         input.setText(rama.getNombreRama());
         input.setSelection(input.getText().length());
@@ -279,18 +270,15 @@ public class RamasTemasActivity extends AppCompatActivity {
             String nuevoNombre = input.getText().toString().trim();
 
             if (!nuevoNombre.isEmpty()) {
-                rama.setNombreRama(nuevoNombre); // Usa el setter
-                rama.setIdCurso(cursoId);
+                RamaEditarDto dto = new RamaEditarDto(
+                        cursoId,
+                        nuevoNombre
+                );
 
-                RamaMantenimiento ramaMantenimiento = new RamaMantenimiento();
-                ramaMantenimiento.setIdCurso(cursoId);
-                ramaMantenimiento.setNombreCurso(cursoNombre);
-
-                rama.setCurso(ramaMantenimiento);
-
-                String json = new Gson().toJson(rama);
+                String json = new Gson().toJson(dto);
                 Log.d("JSON enviado", json);
-                apiService.editarRama(rama.getIdRama(), rama).enqueue(new Callback<Void>() {
+
+                apiService.editarRama(rama.getIdRama(), idUsuario, dto).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
@@ -317,7 +305,190 @@ public class RamasTemasActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancelar", null);
         builder.show();
     }
-    private void EditarTema(TemaEditarDTO temadto) {
+
+    private void onEliminarRama(RamaCurso rama, int idUsuario) {
+        apiService.eliminarRama(rama.getIdRama(),idUsuario).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(RamasTemasActivity.this, "Rama eliminada", Toast.LENGTH_SHORT).show();
+                    cargarRamas();
+                } else {
+                    Toast.makeText(RamasTemasActivity.this, "Error al eliminar: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(RamasTemasActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void verHistorialRama(RamaCurso rama, int idUsuario) {
+        apiService.getHistorialRama(rama.getIdRama()).enqueue(new Callback<List<HistorialRama>>() {
+            @Override
+            public void onResponse(Call<List<HistorialRama>> call, Response<List<HistorialRama>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<HistorialRama> historial = response.body();
+                    mostrarDialogoHistorial(historial);
+                } else {
+                    Toast.makeText(RamasTemasActivity.this, "No se pudo obtener el historial", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<HistorialRama>> call, Throwable t) {
+                Toast.makeText(RamasTemasActivity.this, "Error de conexión", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void mostrarDialogoHistorial(List<HistorialRama> historialRama) {
+        Context context = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Historial de la Rama");
+
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_historial_rama, null);
+        LinearLayout layouRama = view.findViewById(R.id.layoutRama);
+
+        if (historialRama != null && !historialRama.isEmpty()) {
+            for (HistorialRama historial : historialRama) {
+                CardView card = new CardView(context);
+                LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                cardParams.setMargins(0, 8, 0, 8);
+                card.setLayoutParams(cardParams);
+                card.setRadius(16f);
+                card.setCardElevation(6f);
+                card.setUseCompatPadding(true);
+
+                LinearLayout container = new LinearLayout(context);
+                container.setOrientation(LinearLayout.VERTICAL);
+                container.setPadding(24, 24, 24, 24);
+
+                TextView tvAccion = crearText("Acción: ", historial.getAccion(), true);
+                TextView tvNombreAnterior = crearText("Nombre anterior: ", historial.getNombreAnterior(), false);
+                TextView tvNombreNuevo = crearText("Nombre nuevo: ", historial.getNombreNuevo(), false);
+                TextView tvFecha = crearText("Fecha: ", historial.getFechaCambio(), false);
+                TextView tvUsuario = crearText("Usuario responsable: ", historial.getNombreUsuario(), false);
+
+                container.addView(tvAccion);
+                container.addView(tvNombreAnterior);
+                container.addView(tvNombreNuevo);
+                container.addView(tvFecha);
+                container.addView(tvUsuario);
+
+                card.addView(container);
+                layouRama.addView(card);
+            }
+        } else {
+            TextView tv = new TextView(context);
+            tv.setText("No hay historial para este curso.");
+            tv.setPadding(0, 20, 0, 20);
+            tv.setTextSize(16);
+            tv.setTextColor(Color.GRAY);
+            layouRama.addView(tv);
+        }
+
+        builder.setView(view);
+        builder.setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.teal_700));
+    }
+    private TextView crearText(String label, String value, boolean boldTitle) {
+        Context context = this;
+        TextView textView = new TextView(context);
+        SpannableString spannable = new SpannableString(label + value);
+        if (boldTitle) {
+            spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        textView.setText(spannable);
+        textView.setTextSize(15);
+        textView.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
+        textView.setPadding(0, 4, 0, 4);
+        return textView;
+    }
+
+    private void mostrarDialogoCrearTema() {
+        if (ramaSeleccionada == null) {
+            Toast.makeText(this, "Debes seleccionar una rama primero", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Nuevo Tema");
+
+        View view = getLayoutInflater().inflate(R.layout.dialog_nuevo_tema, null);
+        final EditText input = view.findViewById(R.id.edtNombreTema);
+
+        builder.setView(view);
+
+        builder.setPositiveButton("Guardar", (dialog, which) -> {
+            String nombre = input.getText().toString().trim();
+            if (nombre.isEmpty()) {
+                Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int idGrado = gradoSeleccionado;
+
+            // Construimos el DTO
+            TemaCrearDTO temaDTO = new TemaCrearDTO(nombre, ramaSeleccionada.getIdRama(), idGrado);
+            Log.d("API_DEBUG", "Enviando: " + new Gson().toJson(temaDTO));
+
+            apiService.crearTema(usuarioId, temaDTO).enqueue(new Callback<TemaCurso>() {
+                @Override
+                public void onResponse(Call<TemaCurso> call, Response<TemaCurso> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        TemaCurso creado = response.body();
+
+                        listaTemas.add(creado);
+                        temasAdapter.notifyItemInserted(listaTemas.size() - 1);
+
+                        Toast.makeText(RamasTemasActivity.this, "Tema agregado correctamente", Toast.LENGTH_SHORT).show();
+                        Log.d("API_DEBUG", "Tema creado: " + new Gson().toJson(creado));
+                    } else {
+                        Toast.makeText(RamasTemasActivity.this, "Error al guardar tema", Toast.LENGTH_SHORT).show();
+                        Log.e("API_DEBUG", "Respuesta error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<TemaCurso> call, Throwable t) {
+                    Toast.makeText(RamasTemasActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("API_DEBUG", "Error de red: " + t.getMessage(), t);
+                }
+            });
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+    private void EliminarTema(TemaCurso tema, int idUsuario) {
+        apiService.eliminarTema(tema.getIdTema(),idUsuario).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(RamasTemasActivity.this, "Tema eliminado", Toast.LENGTH_SHORT).show();
+                    listaTemas.add(tema);
+                } else {
+                    Toast.makeText(RamasTemasActivity.this, "Error al eliminar: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(RamasTemasActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void EditarTema(TemaCurso tema, int idUsuario) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Editar Tema");
 
@@ -328,7 +499,7 @@ public class RamasTemasActivity extends AppCompatActivity {
         layout.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
 
         final EditText input = new EditText(this);
-        input.setText(temadto.getNombre());
+        input.setText(tema.getNombre());
         input.setHint("Nombre del tema");
         input.setTextColor(Color.BLACK);
         input.setLayoutParams(new LinearLayout.LayoutParams(
@@ -341,61 +512,38 @@ public class RamasTemasActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Guardar", (dialog, which) -> {
             String nuevoNombre = input.getText().toString().trim();
-            if (nuevoNombre.isEmpty()) {
-                Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if(!nuevoNombre.isEmpty()){
+                TemaEditarDTO temadto = new TemaEditarDTO(
+                        tema.getIdTema(),
+                        nuevoNombre,
+                        idUsuario,
+                        tema.getIdRama()
+                );
+                String json = new Gson().toJson(temadto);
+                Log.d("JSON enviado", json);
 
-            temadto.setNombre(nuevoNombre);
-
-            String json = new Gson().toJson(temadto);
-            Log.d("JSON enviado", json);
-
-            apiService.editarTema(temadto.getIdTema(), temadto).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(RamasTemasActivity.this, "Tema actualizado", Toast.LENGTH_SHORT).show();
-                        mostrarTemasDeRama(ramaSeleccionada.getIdRama());
-                    } else {
-                        Toast.makeText(RamasTemasActivity.this, "Error al actualizar tema", Toast.LENGTH_SHORT).show();
-                        Log.e("API", "Código error: " + response.code());
+                apiService.editarTema(tema.getIdTema(),idUsuario,temadto).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(RamasTemasActivity.this, "Tema actualizado", Toast.LENGTH_SHORT).show();
+                            mostrarTemasDeRama(ramaSeleccionada.getIdRama());
+                        } else {
+                            Toast.makeText(RamasTemasActivity.this, "Error al actualizar tema", Toast.LENGTH_SHORT).show();
+                            Log.e("API", "Código error: " + response.code());
+                        }
                     }
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Toast.makeText(RamasTemasActivity.this, "Error de conexión", Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(RamasTemasActivity.this, "Error de conexión", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show();
+            }
         });
-
         builder.setNegativeButton("Cancelar", null);
         builder.show();
     }
-    private void eliminarTema(TemaCurso tema) {
-        new AlertDialog.Builder(this)
-                .setTitle("Eliminar Tema")
-                .setMessage("¿Estás seguro de eliminar este tema?")
-                .setPositiveButton("Sí", (dialog, which) -> {
-                    apiService.eliminarTema(tema.getIdTema()).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.isSuccessful()) {
-                                Toast.makeText(RamasTemasActivity.this, "Tema eliminado", Toast.LENGTH_SHORT).show();
-                                mostrarTemasDeRama(tema.getIdRama());
-                            } else {
-                                Toast.makeText(RamasTemasActivity.this, "Error al eliminar tema", Toast.LENGTH_SHORT).show();
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(RamasTemasActivity.this, "Error de conexión", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
 }

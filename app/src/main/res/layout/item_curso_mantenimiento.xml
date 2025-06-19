@@ -61,6 +61,17 @@
                 android:src="@drawable/ic_delete"
                 app:tint="@android:color/holo_red_dark"
                 android:layout_marginStart="8dp" />
+
+            <ImageButton
+                android:id="@+id/btnHistorialCurso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Historial del Curso"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_history"
+            app:tint="?attr/colorPrimary"
+            android:layout_marginStart="8dp" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

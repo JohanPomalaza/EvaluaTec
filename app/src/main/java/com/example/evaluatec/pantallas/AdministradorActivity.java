@@ -17,6 +17,8 @@ public class AdministradorActivity extends AppCompatActivity {
     private MotionLayout motionLayout;
     private MaterialCardView cardCreateCourse, cardProfessors, cardStudents;
 
+    private int usuarioId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +28,7 @@ public class AdministradorActivity extends AppCompatActivity {
         cardCreateCourse = findViewById(R.id.cardCreateCourse);
         cardProfessors = findViewById(R.id.cardProfessors);
         cardStudents = findViewById(R.id.cardStudents);
-
+        usuarioId = getIntent().getIntExtra("usuarioId", 0);
         // Inicia la animación automáticamente al cargar la pantalla
         motionLayout.transitionToEnd();
 
@@ -34,16 +36,19 @@ public class AdministradorActivity extends AppCompatActivity {
         // Opcional: listeners para cambios de estado de animación
         cardCreateCourse.setOnClickListener(v -> {
             Intent intent = new Intent(AdministradorActivity.this, CursoMantenimientoActivity.class);
+            intent.putExtra("usuarioId", usuarioId);
             startActivity(intent);
         });
 
         cardProfessors.setOnClickListener(v -> {
             Intent intent = new Intent(AdministradorActivity.this, ProfesoresMantenimientoActivity.class);
+            intent.putExtra("usuarioId", usuarioId);
             startActivity(intent);
         });
 
         cardStudents.setOnClickListener(v -> {
             Intent intent = new Intent(AdministradorActivity.this, EstudiantesMantenimientoActivity.class);
+            intent.putExtra("usuarioId", usuarioId);
             startActivity(intent);
         });
     }

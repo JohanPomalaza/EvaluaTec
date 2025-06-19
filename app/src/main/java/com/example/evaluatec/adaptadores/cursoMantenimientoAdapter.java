@@ -1,5 +1,6 @@
 package com.example.evaluatec.adaptadores;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +19,21 @@ import java.util.List;
 public class cursoMantenimientoAdapter extends RecyclerView.Adapter<cursoMantenimientoAdapter.ViewHolder> {
     private List<CursoMantenimiento> lista;
     private OnCursoListener listener;
+    private int usuarioId;
+
 
     public interface OnCursoListener {
-        void onEditar(CursoMantenimiento cursoMante);
-        void onEliminar(CursoMantenimiento cursoMante);
-        void onVerRamasYTemas(CursoMantenimiento cursoMante);
+        void onEditar(CursoMantenimiento cursoMante, int usuarioId);
+        void onEliminar(CursoMantenimiento cursoMante, int usuarioId);
+        void onVerRamasYTemas(CursoMantenimiento cursoMante, int usuarioId);
+
+        void onVerHistorial(CursoMantenimiento cursoMante, int usuarioId);
     }
 
-    public cursoMantenimientoAdapter(List<CursoMantenimiento> lista, OnCursoListener listener) {
+    public cursoMantenimientoAdapter(List<CursoMantenimiento> lista, OnCursoListener listener, int usuarioId) {
         this.lista = lista;
         this.listener = listener;
+        this.usuarioId = usuarioId;
     }
     @NonNull
     @Override
@@ -41,9 +47,12 @@ public class cursoMantenimientoAdapter extends RecyclerView.Adapter<cursoManteni
         CursoMantenimiento cursoMante = lista.get(position);
         holder.txtNombre.setText(cursoMante.getNombreCurso());
 
-        holder.btnEditar.setOnClickListener(v -> listener.onEditar(cursoMante));
-        holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(cursoMante));
-        holder.btnRamasTemas.setOnClickListener(v -> listener.onVerRamasYTemas(cursoMante));
+        holder.btnEditar.setOnClickListener(v -> listener.onEditar(cursoMante, usuarioId));
+        holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(cursoMante, usuarioId));
+        holder.btnRamasTemas.setOnClickListener(v -> listener.onVerRamasYTemas(cursoMante, usuarioId));
+        holder.btnHistorialCurso.setOnClickListener(v -> {
+            listener.onVerHistorial(cursoMante,usuarioId);
+        });
     }
     @Override
     public int getItemCount(){
@@ -53,7 +62,7 @@ public class cursoMantenimientoAdapter extends RecyclerView.Adapter<cursoManteni
         TextView txtNombre;
         //Button btnEditar, btnEliminar, btnRamasTemas;
 
-        ImageButton btnEditar, btnEliminar, btnRamasTemas;
+        ImageButton btnEditar, btnEliminar, btnRamasTemas,btnHistorialCurso;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,6 +70,7 @@ public class cursoMantenimientoAdapter extends RecyclerView.Adapter<cursoManteni
             btnEditar = itemView.findViewById(R.id.btnEditarCurso);
             btnEliminar = itemView.findViewById(R.id.btnEliminarCurso);
             btnRamasTemas = itemView.findViewById(R.id.btnVerRamasTemas);
+            btnHistorialCurso = itemView.findViewById(R.id.btnHistorialCurso);
         }
     }
 

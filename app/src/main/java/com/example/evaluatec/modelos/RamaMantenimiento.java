@@ -9,6 +9,16 @@ public class RamaMantenimiento {
     @SerializedName("nombreCurso")
     private String nombreCurso;
 
+    private int usuarioId;
+
+    public int getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(int usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
     public int getIdCurso() { return idCurso; }
     public void setIdCurso(int idCurso) { this.idCurso = idCurso; }
 

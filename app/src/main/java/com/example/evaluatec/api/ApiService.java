@@ -2,12 +2,18 @@ package com.example.evaluatec.api;
 import com.example.evaluatec.modelos.Alumno;
 import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.CursoMantenimiento;
+import com.example.evaluatec.modelos.CursoUpdateDTO;
 import com.example.evaluatec.modelos.Estudiante;
+import com.example.evaluatec.modelos.HistorialCurso;
 import com.example.evaluatec.modelos.HistorialNota;
+import com.example.evaluatec.modelos.HistorialRama;
 import com.example.evaluatec.modelos.Nota;
 import com.example.evaluatec.modelos.NotaPorCurso;
 import com.example.evaluatec.modelos.RamaCurso;
+import com.example.evaluatec.modelos.RamaCursoCrearDTO;
+import com.example.evaluatec.modelos.RamaEditarDto;
 import com.example.evaluatec.modelos.Secciones;
+import com.example.evaluatec.modelos.TemaCrearDTO;
 import com.example.evaluatec.modelos.TemaCurso;
 import com.example.evaluatec.modelos.TemaEditarDTO;
 import com.example.evaluatec.modelos.Usuario;
@@ -90,13 +96,22 @@ public interface ApiService {
     Call<CursoMantenimiento> getCurso(@Path("id") int id);
 
     @POST("api/Curso")
-    Call<CursoMantenimiento> crearCurso(@Body CursoMantenimiento cursoMante);
+    Call<CursoMantenimiento> crearCurso(
+            @Body CursoMantenimiento curso,
+            @Query("id_usuario_admin") int idAdmin
+    );
 
     @PUT("api/Curso/{id}")
-    Call<Void> editarCurso(@Path("id") int id, @Body CursoMantenimiento cursoMante);
+    Call<Void> editarCurso(@Path("id") int id, @Body CursoUpdateDTO cursoDto);
 
     @DELETE("api/Curso/{id}")
-    Call<Void> eliminarCurso(@Path("id") int id);
+    Call<Void> eliminarCurso(
+            @Path("id") int id,
+            @Query("id_usuario_admin") int idAdmin
+    );
+
+    @GET("api/Curso/Historial/{id}")
+    Call<List<HistorialCurso>> obtenerHistorialCurso(@Path("id") int idCurso);
 
     /* ------------------------------- */
 
@@ -105,25 +120,36 @@ public interface ApiService {
     Call<List<RamaCurso>> getRamasPorCurso(@Path("idCurso") int idCurso);
 
     @POST("api/RamasCurso")
-    Call<RamaCurso> crearRama(@Body RamaCurso rama);
+    Call<Void> crearRama(@Body RamaCursoCrearDTO nuevaRama);
 
-    @PUT("api/RamasCurso/{id}")
-    Call<Void> editarRama(@Path("id") int id, @Body RamaCurso rama);
+    @PUT("api/RamasCurso/{id}/{idUsuario}")
+    Call<Void> editarRama(
+            @Path("id") int id,
+            @Path("idUsuario") int idUsuario,
+            @Body RamaEditarDto dto
+    );
 
-    @DELETE("api/RamasCurso/{id}")
-    Call<Void> eliminarRama(@Path("id") int id);
+    @DELETE("api/RamasCurso/{id}/{idUsuario}")
+    Call<Void> eliminarRama(@Path("id") int id,
+                            @Path("idUsuario") int idUsuario );
+
+    @GET("api/RamasCurso/historial/{idRama}")
+    Call<List<HistorialRama>> getHistorialRama(@Path("idRama") int idRama);
     /* ------------------------------- */
 
     /*CRUD PARA TEMAS*/
     @GET("api/TemasCurso/porRama/{idRama}")
     Call<List<TemaCurso>> getTemasPorRama(@Path("idRama") int idRama);
 
-    @POST("api/TemasCurso")
-    Call<TemaCurso> crearTema(@Body TemaCurso tema);
+    @POST("api/TemasCurso/{idUsuario}")
+    Call<TemaCurso> crearTema(@Path("idUsuario") int idUsuario, @Body TemaCrearDTO temaDTO);
 
-    @PUT("api/TemasCurso/{id}")
-    Call<Void> editarTema(@Path("id") int idTema, @Body TemaEditarDTO tema);
-    @DELETE("api/TemasCurso/{id}")
-    Call<Void> eliminarTema(@Path("id") int id);
+    @PUT("api/TemasCurso/{id}/{idUsuario}")
+    Call<Void> editarTema(@Path("id") int idTema,
+                          @Path("idUsuario") int idUsuario,
+                          @Body TemaEditarDTO tema);
+    @DELETE("api/TemasCurso/{id}/{idUsuario}")
+    Call<Void> eliminarTema(@Path("id") int id,
+                            @Path("idUsuario") int idUsuario);
     /* ------------------------------- */
 }

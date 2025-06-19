@@ -14,6 +14,26 @@ public class RamaCurso {
 
     @SerializedName("curso")
     private RamaMantenimiento ramaMantenimiento;
+
+    private int idGrado;
+
+    public int getIdGrado() {
+        return idGrado;
+    }
+
+    public void setIdGrado(int idGrado) {
+        this.idGrado = idGrado;
+    }
+
+    private int usuarioId;
+
+    public int getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(int usuarioId) {
+        this.usuarioId = usuarioId;
+    }
     // Getters y Setters
     public int getIdRama() { return idRama; }
     public void setIdRama(int idRama) { this.idRama = idRama; }

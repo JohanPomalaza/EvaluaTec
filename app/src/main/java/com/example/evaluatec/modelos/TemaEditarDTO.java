@@ -10,12 +10,16 @@ public class TemaEditarDTO {
     private String nombre;
 
     private int idRama;
+
+    private  int idUsuario;
     public TemaEditarDTO() {
     }
 
-    public TemaEditarDTO(int idTema, String nombre) {
+    public TemaEditarDTO(int idTema, String nombre, int idUsuario, int idRama) {
         this.idTema = idTema;
         this.nombre = nombre;
+        this.idUsuario = idUsuario;
+        this.idRama = idRama;
     }
 
     public int getIdTema() {

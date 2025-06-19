@@ -10,6 +10,17 @@ public class TemaCurso {
 
     private int idCurso;
     private int idRama;
+    @SerializedName("idGrado")
+    private int idGrado;
+    private Grado grado;
+
+    public int getIdGrado() {
+        return idGrado;
+    }
+
+    public void setIdGrado(int idGrado) {
+        this.idGrado = idGrado;
+    }
 
     // Getters y setters
     public int getIdTema() {
@@ -43,5 +54,10 @@ public class TemaCurso {
     public void setIdRama(int idRama) {
         this.idRama = idRama;
     }
-
+    public Grado getGrado() {
+        return grado;
+    }
+    public void setGrado(Grado grado) {
+        this.grado = grado;
+    }
 }

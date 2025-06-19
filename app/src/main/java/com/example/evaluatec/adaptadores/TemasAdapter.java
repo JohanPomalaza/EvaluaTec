@@ -1,32 +1,30 @@
 package com.example.evaluatec.adaptadores;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evaluatec.R;
-import com.example.evaluatec.modelos.TemaEditarDTO;
+import com.example.evaluatec.modelos.TemaCurso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHolder> {
-    private List<TemaEditarDTO> listaTemas;
+    private List<TemaCurso> listaTemas;
     private final OnTemaActionListener listener;
 
     public interface OnTemaActionListener {
-        void onEditarTema(TemaEditarDTO tema);
-        void onEliminarTema(TemaEditarDTO tema);
+        void onEditarTema(TemaCurso tema);
+        void onEliminarTema(TemaCurso tema);
     }
 
-    public TemasAdapter(List<TemaEditarDTO> listaTemas, OnTemaActionListener listener) {
+    public TemasAdapter(List<TemaCurso> listaTemas, OnTemaActionListener listener) {
         this.listaTemas = listaTemas != null ? listaTemas : new ArrayList<>();
         this.listener = listener;
     }
@@ -40,7 +38,7 @@ public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TemaViewHolder holder, int position) {
-        TemaEditarDTO tema = listaTemas.get(position);
+        TemaCurso tema = listaTemas.get(position);
         holder.txtNombre.setText(tema.getNombre());
 
         holder.btnEditar.setOnClickListener(v -> listener.onEditarTema(tema));

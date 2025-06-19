@@ -20,6 +20,8 @@ public class RamasAdapter extends RecyclerView.Adapter<RamasAdapter.RamaViewHold
         void onEditar(RamaCurso rama);
         void onEliminar(RamaCurso rama);
         void onVerTemas(RamaCurso rama);
+
+        void onVerHistorialRamas(RamaCurso rama);
     }
 
     private List<RamaCurso> listaRamas;
@@ -45,6 +47,7 @@ public class RamasAdapter extends RecyclerView.Adapter<RamasAdapter.RamaViewHold
         holder.btnEditar.setOnClickListener(v -> listener.onEditar(rama));
         holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(rama));
         holder.btnVerTemas.setOnClickListener(v -> listener.onVerTemas(rama));
+        holder.btnVerHistorial.setOnClickListener(v -> listener.onVerHistorialRamas(rama));
     }
 
     @Override
@@ -54,7 +57,7 @@ public class RamasAdapter extends RecyclerView.Adapter<RamasAdapter.RamaViewHold
 
     static class RamaViewHolder extends RecyclerView.ViewHolder {
         TextView tvNombreRama;
-        ImageButton btnEditar, btnEliminar, btnVerTemas;
+        ImageButton btnEditar, btnEliminar, btnVerTemas, btnVerHistorial;
 
         public RamaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,6 +65,7 @@ public class RamasAdapter extends RecyclerView.Adapter<RamasAdapter.RamaViewHold
             btnEditar = itemView.findViewById(R.id.btnEditarRama);
             btnEliminar = itemView.findViewById(R.id.btnEliminarRama);
             btnVerTemas = itemView.findViewById(R.id.btnVerTemas);
+            btnVerHistorial = itemView.findViewById(R.id.btnHistorialRama);
         }
     }
 }
