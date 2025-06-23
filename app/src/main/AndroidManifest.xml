@@ -17,6 +17,9 @@
         android:theme="@style/Theme.EvaluaTec"
         tools:targetApi="31">
         <activity
+            android:name=".pantallas.activity_asignaciones"
+            android:exported="false" />
+        <activity
             android:name=".TipoUsuarioActivity"
             android:exported="false" />
         <activity
@@ -27,6 +30,9 @@
             android:exported="false" />
         <activity
             android:name=".pantallas.EstudiantesMantenimientoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pantallas.ProfesoresMantenimientoActivity"
             android:exported="false" />
         <activity
             android:name=".pantallas.CursoMantenimientoActivity"
@@ -43,7 +49,6 @@
         <activity
             android:name=".pantallas.TemasNotasActivity"
             android:exported="false" />
-
         <activity
             android:name=".InicioActivity"
             android:exported="true">
@@ -68,7 +73,6 @@
         <activity
             android:name=".pantallas.CoursesActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

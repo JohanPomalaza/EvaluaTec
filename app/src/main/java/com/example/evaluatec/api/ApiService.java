@@ -1,9 +1,16 @@
 package com.example.evaluatec.api;
 import com.example.evaluatec.modelos.Alumno;
+import com.example.evaluatec.modelos.AsignacionActualizarDto;
+import com.example.evaluatec.modelos.AsignacionCrearDto;
+import com.example.evaluatec.modelos.AsignacionDto;
 import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.CursoMantenimiento;
 import com.example.evaluatec.modelos.CursoUpdateDTO;
+import com.example.evaluatec.modelos.DocenteCrearDto;
+import com.example.evaluatec.modelos.DocenteDto;
+import com.example.evaluatec.modelos.DocenteEditarDto;
 import com.example.evaluatec.modelos.Estudiante;
+import com.example.evaluatec.modelos.GradoDto;
 import com.example.evaluatec.modelos.HistorialCurso;
 import com.example.evaluatec.modelos.HistorialNota;
 import com.example.evaluatec.modelos.HistorialRama;
@@ -11,6 +18,7 @@ import com.example.evaluatec.modelos.Nota;
 import com.example.evaluatec.modelos.NotaPorCurso;
 import com.example.evaluatec.modelos.RamaCurso;
 import com.example.evaluatec.modelos.RamaCursoCrearDTO;
+import com.example.evaluatec.modelos.RamaDto;
 import com.example.evaluatec.modelos.RamaEditarDto;
 import com.example.evaluatec.modelos.Secciones;
 import com.example.evaluatec.modelos.TemaCrearDTO;
@@ -152,4 +160,34 @@ public interface ApiService {
     Call<Void> eliminarTema(@Path("id") int id,
                             @Path("idUsuario") int idUsuario);
     /* ------------------------------- */
+
+    /*CRUD PARA DOCENTES*/
+    @GET("api/docentes")
+    Call<List<DocenteDto>> getDocentes();
+
+    @POST("api/docentes")
+    Call<Void> crearDocente(@Body DocenteCrearDto docente);
+
+    @PUT("api/docentes/{id}")
+    Call<Void> editarDocente(@Path("id") int id, @Body DocenteEditarDto docente);
+
+    @POST("api/docentes/{idDocente}/asignar")
+    Call<Void> asignarCurso(@Path("idDocente") int idDocente, @Body AsignacionCrearDto asignacion);
+    @PUT("api/docentes/asignacion/{idAsignacion}")
+    Call<Void> actualizarAsignacion(@Path("idAsignacion") int idAsignacion, @Body AsignacionActualizarDto asignacion);
+
+    @GET("api/docentes/{id}/asignaciones")
+    Call<List<AsignacionDto>> getAsignacionesPorDocente(@Path("id") int idDocente);
+
+
+    @PUT("docentes/{id}/inactivar")
+    Call<Void> inactivarDocente(@Path("id") int idDocente);
+
+    @GET("api/Docentes/grados")
+    Call<List<GradoDto>> getGrados();
+
+    @GET("api/Docentes/ramas")
+    Call<List<RamaDto>> getRamas();
+
+
 }

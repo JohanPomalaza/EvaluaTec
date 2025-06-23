@@ -7,6 +7,7 @@
     android:background="#F5F5F5"
     android:fitsSystemWindows="true">
 
+    <!-- Header -->
     <LinearLayout
         android:id="@+id/headerSection"
         android:layout_width="0dp"
@@ -17,57 +18,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_user"
-            app:tint="@android:color/white" />
-
         <TextView
             android:id="@+id/txtApartado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textColor="@android:color/white"
-            android:text="Gestión de Profesores"
+            android:text="Cursos y Grados Asignados"
             android:textSize="20sp"
             android:textStyle="bold"/>
     </LinearLayout>
 
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerProfesores"
+        android:id="@+id/recyclerAsignaciones"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:padding="16dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/headerSection"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAgregar"
+        android:id="@+id/fabAgregarAsignacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Agregar docente"
         android:src="@drawable/ic_add"
-        app:tint="@android:color/white"
+        android:contentDescription="Agregar asignación"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"
-        app:backgroundTint="#0D47A1"/>
+        android:layout_margin="16dp" />
 
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:background="@drawable/bg_bottom_nav"
-        android:elevation="8dp"
-        app:itemIconTint="@color/bottom_nav_selector"
-        app:itemTextColor="@color/bottom_nav_selector"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:itemIconTint="@color/blue_primary"
+        app:itemTextColor="@color/blue_primary"
         app:menu="@menu/bottom_nav_menu"
-        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
