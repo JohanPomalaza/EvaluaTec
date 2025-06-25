@@ -3,6 +3,7 @@ import com.example.evaluatec.modelos.Alumno;
 import com.example.evaluatec.modelos.AsignacionActualizarDto;
 import com.example.evaluatec.modelos.AsignacionCrearDto;
 import com.example.evaluatec.modelos.AsignacionDto;
+import com.example.evaluatec.modelos.AsignacionGradoDto;
 import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.CursoMantenimiento;
 import com.example.evaluatec.modelos.CursoUpdateDTO;
@@ -10,6 +11,8 @@ import com.example.evaluatec.modelos.DocenteCrearDto;
 import com.example.evaluatec.modelos.DocenteDto;
 import com.example.evaluatec.modelos.DocenteEditarDto;
 import com.example.evaluatec.modelos.Estudiante;
+import com.example.evaluatec.modelos.EstudianteCrearDto;
+import com.example.evaluatec.modelos.EstudianteDto;
 import com.example.evaluatec.modelos.GradoDto;
 import com.example.evaluatec.modelos.HistorialCurso;
 import com.example.evaluatec.modelos.HistorialNota;
@@ -188,6 +191,24 @@ public interface ApiService {
 
     @GET("api/Docentes/ramas")
     Call<List<RamaDto>> getRamas();
+    /*-----------------------------------------------------------------------------------------------------------------------------*/
 
+    /*-----CRUD ESTUDIANTE-----*/
+
+    @GET("api/Estudiantes")
+    Call<List<EstudianteDto>> obtenerEstudiantes();
+
+    @POST("api/Estudiantes")
+    Call<Void> crearEstudiante(@Body EstudianteCrearDto estudiante);
+
+    @PUT("api/Estudiantes/{id}")
+    Call<Void> editarEstudiante(@Path("id") int id, @Body EstudianteCrearDto estudiante);
+    @GET("api/Estudiantes/Grados")  // o la ruta que elijas
+    Call<List<GradoDto>> obtenerGrados();
+    @POST("api/Estudiantes/{idEstudiante}/asignar")
+    Call<Void> asignarGrado(
+            @Path("idEstudiante") int idEstudiante,
+            @Body AsignacionGradoDto dto
+    );
 
 }
