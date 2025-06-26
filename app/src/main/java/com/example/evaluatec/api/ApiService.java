@@ -90,7 +90,8 @@ public interface ApiService {
             @Query("id_usuario_docente") int idUsuarioDocente,
             @Query("id_tema") int idTema,
             @Query("nota") String nota,
-            @Query("comentario") String comentario
+            @Query("comentario") String comentario,
+            @Query("justificacion") String justificacion
     );
     @GET("api/Curso/notas/historial")
     Call<List<HistorialNota>> obtenerHistorialNota(

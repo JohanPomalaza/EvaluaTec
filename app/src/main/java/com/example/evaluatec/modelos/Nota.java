@@ -28,6 +28,17 @@ public class Nota {
     @SerializedName("comentario")
     private String comentario;
 
+    @SerializedName("justificacion")
+    private String justificacion;
+
+    public String getJustificacion() {
+        return justificacion;
+    }
+
+    public void setJustificacion(String justificacion) {
+        this.justificacion = justificacion;
+    }
+
     // Getters y Setters
     public int getIdNota() {
         return idNota;

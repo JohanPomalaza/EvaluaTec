@@ -126,7 +126,7 @@ public class EstudiantesMantenimientoActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(EstudiantesMantenimientoActivity.this, "Error al crear", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EstudiantesMantenimientoActivity.this, "Error al crear y/o el correo ingresado ya existe", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {

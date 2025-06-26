@@ -72,10 +72,12 @@ public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.
             holder.edtNota.setTextColor(Color.BLACK);
         }
         holder.edtComentario.setText(nota.getComentario());
+        holder.edtJustificacion.setText(nota.getJustificacion());
 
         holder.btnGuardar.setOnClickListener(v -> {
             String nuevaNota = holder.edtNota.getText().toString().trim();
             String nuevoComentario = holder.edtComentario.getText().toString().trim();
+            String justificacion = holder.edtJustificacion.getText().toString().trim();
 
             Log.d("NotaAdapterDocente", "Guardando nota: " + nuevaNota + ", comentario: " + nuevoComentario +
                     ", temaId: " + nota.getIdTema() + ", alumnoId: " + alumnoId + ", docenteId: " + usuarioId);
@@ -94,13 +96,19 @@ public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.
                 holder.edtNota.setError("Nota inválida");
                 return;
             }
+            if (justificacion.isEmpty()) {
+                holder.edtJustificacion.setError("Debes ingresar una justificación para modificar la nota");
+                holder.edtJustificacion.requestFocus();
+                return;
+            }
 
             apiService.agregarOEditarNotaConComentario(
                     alumnoId,
                     usuarioId,
                     nota.getIdTema(),
                     nuevaNota,
-                    nuevoComentario
+                    nuevoComentario,
+                    justificacion
             ).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -168,6 +176,7 @@ public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.
                 TextView tvComentNuevo = crearText("Comentario nuevo: ", historial.getComentarioNuevo(), false);
                 TextView tvFecha = crearText("Fecha: ", historial.getFechaCambio(), false);
                 TextView tvDocente = crearText("Docente: ", historial.getNombreDocente(), false);
+                TextView tvJustificacion = crearText("Justificacion: ", historial.getJustificacion(), false);
 
                 container.addView(tvAccion);
                 container.addView(tvNotas);
@@ -176,6 +185,7 @@ public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.
                 container.addView(tvComentNuevo);
                 container.addView(tvFecha);
                 container.addView(tvDocente);
+                container.addView(tvJustificacion);
 
                 card.addView(container);
                 layoutHistorial.addView(card);
@@ -219,7 +229,7 @@ public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.
 
     public static class NotaViewHolder extends RecyclerView.ViewHolder {
         TextView txtTema;
-        EditText edtNota, edtComentario;
+        EditText edtNota, edtComentario,edtJustificacion;
         Button btnGuardar,btnVerHistorial;
 
         public NotaViewHolder(@NonNull View itemView) {
@@ -229,6 +239,7 @@ public class NotaAdapterDocente extends RecyclerView.Adapter<NotaAdapterDocente.
             edtComentario = itemView.findViewById(R.id.edtComentario);
             btnGuardar = itemView.findViewById(R.id.btnGuardarNota);
             btnVerHistorial = itemView.findViewById(R.id.btnHistorial);
+            edtJustificacion = itemView.findViewById(R.id.edtJustificacion);
         }
     }
 

@@ -162,7 +162,7 @@ public class ProfesoresMantenimientoActivity extends AppCompatActivity  {
                     Toast.makeText(ProfesoresMantenimientoActivity.this, "Docente creado", Toast.LENGTH_SHORT).show();
                     cargarDocentes();
                 } else {
-                    Toast.makeText(ProfesoresMantenimientoActivity.this, "Error al crear", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfesoresMantenimientoActivity.this, "Error al crear y/o el correo ingresado ya esta registrado", Toast.LENGTH_SHORT).show();
                     Log.e("CREAR_DOCENTE_ERROR", "Código: " + response.code() + " - " + response.message());
                 }
             }

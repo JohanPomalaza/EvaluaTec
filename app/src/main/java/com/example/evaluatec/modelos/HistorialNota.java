@@ -8,6 +8,15 @@ public class HistorialNota {
     private String comentarioNuevo;
     private String fechaCambio;
     private String nombreDocente;
+    private String justificacion;
+
+    public String getJustificacion() {
+        return justificacion;
+    }
+
+    public void setJustificacion(String justificacion) {
+        this.justificacion = justificacion;
+    }
 
     public String getNombreDocente(){
         return nombreDocente;
