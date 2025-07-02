@@ -7,10 +7,23 @@
     android:padding="24dp"
     android:background="?android:attr/windowBackground">
 
+    <TextView
+        android:id="@+id/headerTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#002366"
+        android:text="Nuevo de Curso"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutCurso"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:hint="Nombre del curso"
         app:boxBackgroundMode="filled"

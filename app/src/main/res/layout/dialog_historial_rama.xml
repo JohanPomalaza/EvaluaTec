@@ -6,8 +6,27 @@
     android:padding="20dp">
 
     <LinearLayout
-        android:id="@+id/layoutRama"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/headerHistorialRama"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#002366"
+            android:text="Historial Rama"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:padding="12dp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/layoutRama"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 </ScrollView>

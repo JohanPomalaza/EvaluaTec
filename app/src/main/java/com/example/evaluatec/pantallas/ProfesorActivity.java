@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -32,7 +33,7 @@ public class ProfesorActivity extends AppCompatActivity {
             return;
         }
 
-        Button btnSecciones = findViewById(R.id.btnViewSecciones);
+        CardView btnSecciones = findViewById(R.id.btnSecciones);
         btnSecciones.setOnClickListener(v -> {
             Intent intent = new Intent(ProfesorActivity.this, SeccionesActivity.class);
             intent.putExtra("usuarioId", usuarioId);
@@ -42,7 +43,7 @@ public class ProfesorActivity extends AppCompatActivity {
 
 
         // Configurar botón de registrar notas
-        Button btnRegisterGrades = findViewById(R.id.btnRegisterGrades);
+        CardView  btnRegisterGrades = findViewById(R.id.btnRegistrarNotas);
         btnRegisterGrades.setOnClickListener(v -> {
             Intent intent = new Intent(ProfesorActivity.this, GradesActivity.class);
             startActivity(intent);

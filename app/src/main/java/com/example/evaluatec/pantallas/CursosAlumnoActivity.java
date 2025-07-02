@@ -48,7 +48,7 @@ public class CursosAlumnoActivity extends AppCompatActivity {
         int anioEscolar = getIntent().getIntExtra("anioEscolar", 0);
         int usuarioId = getIntent().getIntExtra("usuarioId", 0);
 
-        apiService.getCursosPorAlumno(alumnoId).enqueue(new Callback<List<Curso>>() {
+        apiService.getCursosPorAlumnoDocente(alumnoId,usuarioId).enqueue(new Callback<List<Curso>>() {
             @Override
             public void onResponse(Call<List<Curso>> call, Response<List<Curso>> response) {
                 if (response.isSuccessful() && response.body() != null) {

@@ -16,6 +16,8 @@
     <color name="gradient_start">#2196F3</color>
     <color name="gradient_end">#3F51B5</color>
     <color name="card_background">#FFFFFF</color>
+    <color name="tertiary">#F9A825</color>
+    <color name="gray_dark">#4A4A4A</color>
      <!-- Verde oscuro profesional -->
     <color name="primary_light">#F1E6FF</color>
     <color name="section_border">#E0E0E0</color>

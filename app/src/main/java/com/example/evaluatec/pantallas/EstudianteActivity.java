@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -13,9 +15,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.evaluatec.NotificacionesActivity;
 import com.example.evaluatec.R;
 import com.example.evaluatec.api.ApiCliente;
 import com.example.evaluatec.modelos.NotaPorCurso;
+import com.example.evaluatec.modelos.NotificacionDto;
 import com.google.android.material.navigation.NavigationBarView;
 import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.modelos.Curso;
@@ -43,6 +47,8 @@ import retrofit2.Response;
         private List<NotaPorCurso> listaNotas = new ArrayList<>();
         private ApiService apiService;
         private int usuarioId;
+        TextView badgeNotificaciones;
+        ImageButton btnNotificaciones;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,7 @@ import retrofit2.Response;
             setupRecyclerViews();
             setupApiService();
             obtenerDatosUsuario();
+            obtenerCantidadNoLeidas();
             cargarCursos();
             setupBottomNavigation();
         }
@@ -62,6 +69,16 @@ import retrofit2.Response;
             bottomNav = findViewById(R.id.bottom_navigation);
             rvCursos = findViewById(R.id.rvCursos);
             rvDetalleCursos = findViewById(R.id.rvDetalleCursos);
+            badgeNotificaciones = findViewById(R.id.badgeNotificaciones);
+            btnNotificaciones = findViewById(R.id.btnNotificaciones);
+
+
+            btnNotificaciones.setOnClickListener(v -> {
+                Intent intent = new Intent(this, NotificacionesActivity.class);
+                intent.putExtra("usuarioId", usuarioId);
+                startActivity(intent);
+            });
+
         }
 
         private void setupBottomNavigation() {
@@ -171,5 +188,33 @@ import retrofit2.Response;
 
         private void mostrarMensajeError(String mensaje) {
             Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
+        }
+        private void obtenerCantidadNoLeidas() {
+            apiService.getNotificacionesNoLeidas(usuarioId).enqueue(new Callback<List<NotificacionDto>>() {
+                @Override
+                public void onResponse(Call<List<NotificacionDto>> call, Response<List<NotificacionDto>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        int cantidad = response.body().size();
+                        runOnUiThread(() -> {
+                            if (cantidad > 0) {
+                                badgeNotificaciones.setText(String.valueOf(cantidad));
+                                badgeNotificaciones.setVisibility(View.VISIBLE);
+                            } else {
+                                badgeNotificaciones.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<NotificacionDto>> call, Throwable t) {
+                    // Silenciar o mostrar error
+                }
+            });
+        }
+        @Override
+        protected void onResume() {
+            super.onResume();
+            obtenerCantidadNoLeidas();
         }
     }

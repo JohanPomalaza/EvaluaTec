@@ -19,6 +19,7 @@ import com.example.evaluatec.modelos.HistorialNota;
 import com.example.evaluatec.modelos.HistorialRama;
 import com.example.evaluatec.modelos.Nota;
 import com.example.evaluatec.modelos.NotaPorCurso;
+import com.example.evaluatec.modelos.NotificacionDto;
 import com.example.evaluatec.modelos.RamaCurso;
 import com.example.evaluatec.modelos.RamaCursoCrearDTO;
 import com.example.evaluatec.modelos.RamaDto;
@@ -51,6 +52,10 @@ public interface ApiService {
 
     @GET("api/Curso/alumno/{idUsuario}/cursos")
     Call<List<Curso>> getCursosPorAlumno(@Path("idUsuario") int idUsuario);
+
+    @GET("api/Curso/alumno/{idUsuario}/docente/{idDocente}/cursos")
+    Call<List<Curso>> getCursosPorAlumnoDocente(@Path("idUsuario") int idUsuario,
+                                                @Path("idDocente") int idDocente);
     /* ------------------------------- */
 
 /*LISTA LAS NOTAS SEGUN ESTUDIANTE*/
@@ -211,5 +216,12 @@ public interface ApiService {
             @Path("idEstudiante") int idEstudiante,
             @Body AsignacionGradoDto dto
     );
+    /*-----NOTIFICACIONES-----*/
 
+    @PUT("api/curso/notificaciones/{id}/leer")
+    Call<Void> marcarComoLeida(@Path("id") int idNotificacion);
+    @GET("api/curso/notificaciones/estudiante/{id}/todas")
+    Call<List<NotificacionDto>> getHistorialNotificaciones(@Path("id") int idUsuario);
+    @GET("api/curso/notificaciones/estudiante/{id}")
+    Call<List<NotificacionDto>> getNotificacionesNoLeidas(@Path("id") int idUsuario);
 }
