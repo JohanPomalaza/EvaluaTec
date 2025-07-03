@@ -35,6 +35,7 @@ import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.CursoMantenimiento;
 import com.example.evaluatec.modelos.HistorialCurso;
 import com.example.evaluatec.modelos.HistorialRama;
+import com.example.evaluatec.modelos.HistorialTema;
 import com.example.evaluatec.modelos.RamaCurso;
 import com.example.evaluatec.modelos.RamaCursoCrearDTO;
 import com.example.evaluatec.modelos.RamaEditarDto;
@@ -121,6 +122,10 @@ public class RamasTemasActivity extends AppCompatActivity {
             @Override
             public void onEliminarTema(TemaCurso tema) {
                  EliminarTema(tema, usuarioId);
+            }
+            @Override
+            public void onVerHistorialTemas(TemaCurso tema) {
+                verHistorialTema(tema, usuarioId);
             }
         });
 
@@ -452,7 +457,7 @@ public class RamasTemasActivity extends AppCompatActivity {
                         Toast.makeText(RamasTemasActivity.this, "Tema agregado correctamente", Toast.LENGTH_SHORT).show();
                         Log.d("API_DEBUG", "Tema creado: " + new Gson().toJson(creado));
                     } else {
-                        Toast.makeText(RamasTemasActivity.this, "Error al guardar tema", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RamasTemasActivity.this, "Error al guardar tema o el nombre del tema ya existe", Toast.LENGTH_SHORT).show();
                         Log.e("API_DEBUG", "Respuesta error: " + response.code());
                     }
                 }
@@ -476,7 +481,8 @@ public class RamasTemasActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(RamasTemasActivity.this, "Tema eliminado", Toast.LENGTH_SHORT).show();
-                    listaTemas.add(tema);
+                    listaTemas.remove(tema);
+                    temasAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(RamasTemasActivity.this, "Error al eliminar: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
@@ -544,6 +550,81 @@ public class RamasTemasActivity extends AppCompatActivity {
         });
         builder.setNegativeButton("Cancelar", null);
         builder.show();
+    }
+    private void verHistorialTema(TemaCurso tema, int idUsuario) {
+        apiService.getHistorialTema(tema.getIdTema()).enqueue(new Callback<List<HistorialTema>>() {
+            @Override
+            public void onResponse(Call<List<HistorialTema>> call, Response<List<HistorialTema>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<HistorialTema> historialTema = response.body();
+                    mostrarDialogoHistorialTema(historialTema);
+                } else {
+                    Toast.makeText(RamasTemasActivity.this, "No se pudo obtener el historial", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<HistorialTema>> call, Throwable t) {
+                Toast.makeText(RamasTemasActivity.this, "Error de conexión", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void mostrarDialogoHistorialTema(List<HistorialTema> historialTema) {
+        Context context = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Historial del Tema");
+
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_historial_tema, null);
+        LinearLayout layoutTema = view.findViewById(R.id.layoutTema);
+
+        if (historialTema != null && !historialTema.isEmpty()) {
+            for (HistorialTema historial : historialTema) {
+                CardView card = new CardView(context);
+                LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                cardParams.setMargins(0, 8, 0, 8);
+                card.setLayoutParams(cardParams);
+                card.setRadius(16f);
+                card.setCardElevation(6f);
+                card.setUseCompatPadding(true);
+
+                LinearLayout container = new LinearLayout(context);
+                container.setOrientation(LinearLayout.VERTICAL);
+                container.setPadding(24, 24, 24, 24);
+
+                TextView tvAccion = crearText("Acción: ", historial.getAccion(), true);
+                TextView tvNombreAnterior = crearText("Nombre anterior: ", historial.getNombreAnterior(), false);
+                TextView tvNombreNuevo = crearText("Nombre nuevo: ", historial.getNombreNuevo(), false);
+                TextView tvFecha = crearText("Fecha: ", historial.getFechaCambio(), false);
+                TextView tvUsuario = crearText("Usuario responsable: ", historial.getNombreUsuario(), false);
+
+                container.addView(tvAccion);
+                container.addView(tvNombreAnterior);
+                container.addView(tvNombreNuevo);
+                container.addView(tvFecha);
+                container.addView(tvUsuario);
+
+                card.addView(container);
+                layoutTema.addView(card);
+            }
+        } else {
+            TextView tv = new TextView(context);
+            tv.setText("No hay historial para este curso.");
+            tv.setPadding(0, 20, 0, 20);
+            tv.setTextSize(16);
+            tv.setTextColor(Color.GRAY);
+            layoutTema.addView(tv);
+        }
+
+        builder.setView(view);
+        builder.setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.teal_700));
     }
 
 }

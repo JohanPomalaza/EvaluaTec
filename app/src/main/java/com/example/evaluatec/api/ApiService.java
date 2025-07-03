@@ -17,6 +17,7 @@ import com.example.evaluatec.modelos.GradoDto;
 import com.example.evaluatec.modelos.HistorialCurso;
 import com.example.evaluatec.modelos.HistorialNota;
 import com.example.evaluatec.modelos.HistorialRama;
+import com.example.evaluatec.modelos.HistorialTema;
 import com.example.evaluatec.modelos.Nota;
 import com.example.evaluatec.modelos.NotaPorCurso;
 import com.example.evaluatec.modelos.NotificacionDto;
@@ -168,6 +169,9 @@ public interface ApiService {
     @DELETE("api/TemasCurso/{id}/{idUsuario}")
     Call<Void> eliminarTema(@Path("id") int id,
                             @Path("idUsuario") int idUsuario);
+
+    @GET("api/TemasCurso/historial/{idTema}")
+    Call<List<HistorialTema>> getHistorialTema(@Path("idTema") int idTema);
     /* ------------------------------- */
 
     /*CRUD PARA DOCENTES*/

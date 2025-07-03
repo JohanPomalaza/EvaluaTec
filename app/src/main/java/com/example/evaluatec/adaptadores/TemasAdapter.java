@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evaluatec.R;
+import com.example.evaluatec.modelos.RamaCurso;
 import com.example.evaluatec.modelos.TemaCurso;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHold
     public interface OnTemaActionListener {
         void onEditarTema(TemaCurso tema);
         void onEliminarTema(TemaCurso tema);
+        void onVerHistorialTemas(TemaCurso tema);
     }
 
     public TemasAdapter(List<TemaCurso> listaTemas, OnTemaActionListener listener) {
@@ -43,6 +45,7 @@ public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHold
 
         holder.btnEditar.setOnClickListener(v -> listener.onEditarTema(tema));
         holder.btnEliminar.setOnClickListener(v -> listener.onEliminarTema(tema));
+        holder.btnVerHistorial.setOnClickListener(v -> listener.onVerHistorialTemas(tema));
     }
 
     @Override
@@ -52,13 +55,14 @@ public class TemasAdapter extends RecyclerView.Adapter<TemasAdapter.TemaViewHold
 
     public static class TemaViewHolder extends RecyclerView.ViewHolder {
         TextView txtNombre;
-        ImageButton btnEditar, btnEliminar;
+        ImageButton btnEditar, btnEliminar,btnVerHistorial;
 
         public TemaViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombre = itemView.findViewById(R.id.txtNombreTema);
             btnEditar = itemView.findViewById(R.id.btnEditarTema);
             btnEliminar = itemView.findViewById(R.id.btnEliminarTema);
+            btnVerHistorial = itemView.findViewById(R.id.btnHistorialTema);
         }
     }
 }

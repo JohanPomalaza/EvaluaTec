@@ -10,12 +10,12 @@
     app:strokeColor="@color/purple_500"
     app:strokeWidth="1dp">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <!-- Nombre alineado a la izquierda -->
         <TextView
             android:id="@+id/txtNombre"
             android:layout_width="wrap_content"
@@ -23,8 +23,23 @@
             android:text="Nombre Apellido"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
 
+        <!-- Botón eliminar alineado arriba a la derecha -->
+        <ImageButton
+            android:id="@+id/btnEliminarEstudiante"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Eliminar"
+            android:src="@drawable/ic_delete"
+            app:tint="@android:color/holo_red_dark"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
+
+        <!-- Texto del grado debajo del nombre -->
         <TextView
             android:id="@+id/txtGrado"
             android:layout_width="wrap_content"
@@ -32,13 +47,19 @@
             android:text="Grado: No asignado"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
-            android:layout_marginTop="4dp" />
+            android:layout_below="@id/txtNombre"
+            android:layout_alignStart="@id/txtNombre"
+            android:layout_marginTop="8dp" />
 
+        <!-- Botones alineados horizontalmente debajo del grado -->
         <LinearLayout
+            android:id="@+id/linearBotones"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_below="@id/txtGrado"
+            android:layout_alignStart="@id/txtNombre"
+            android:layout_marginTop="12dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEditar"
@@ -64,6 +85,17 @@
                 android:minWidth="0dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="4dp" />
+
+            <ImageButton
+                android:id="@+id/btnHistorialEstudiante"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Historial de cambios"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_history"
+                app:tint="?attr/colorPrimary"
+                android:layout_marginStart="16dp" />
+
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

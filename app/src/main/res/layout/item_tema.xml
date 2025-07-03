@@ -39,7 +39,7 @@
             app:tint="@android:color/holo_red_dark"
             android:contentDescription="Eliminar" />
         <ImageButton
-            android:id="@+id/btnHistorialCurso"
+            android:id="@+id/btnHistorialTema"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="Historial del Curso"
