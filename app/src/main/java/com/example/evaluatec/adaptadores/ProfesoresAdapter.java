@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ public class ProfesoresAdapter extends RecyclerView.Adapter<ProfesoresAdapter.Vi
 
     public interface OnProfesorActionListener {
         void onEditar(DocenteDto docente);
+        void onEliminar(DocenteDto docente);
         void onVerAsignaciones(DocenteDto docente);
 
     }
@@ -50,6 +52,7 @@ public class ProfesoresAdapter extends RecyclerView.Adapter<ProfesoresAdapter.Vi
 
         holder.imgEditar.setOnClickListener(v -> listener.onEditar(docente));
         holder.itemView.setOnClickListener(v -> listener.onVerAsignaciones(docente));
+        holder.btnEliminarProfe.setOnClickListener(v -> listener.onEliminar(docente));
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), activity_asignaciones.class);
             intent.putExtra("idDocente", docente.idUsuario);
@@ -66,12 +69,14 @@ public class ProfesoresAdapter extends RecyclerView.Adapter<ProfesoresAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtNombre, txtCorreo;
         ImageView imgEditar;
+        ImageButton btnEliminarProfe;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtNombre = itemView.findViewById(R.id.txtNombreDocente);
             txtCorreo = itemView.findViewById(R.id.txtCorreoDocente);
             imgEditar = itemView.findViewById(R.id.imgEditar);
+            btnEliminarProfe = itemView.findViewById(R.id.btnEliminarProfe);
         }
     }
 }

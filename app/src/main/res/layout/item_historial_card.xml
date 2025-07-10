@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:strokeColor="@color/teal_700"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvAccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Acción: "
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tvNotaAnterior"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nota anterior: "
+            android:textSize="14sp"
+            android:paddingTop="4dp"/>
+
+        <TextView
+            android:id="@+id/tvNotaNueva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nota nueva: "
+            android:textSize="14sp"
+            android:paddingTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tvComentarioAnterior"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentario anterior: "
+            android:textSize="14sp"
+            android:paddingTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tvComentarioNuevo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentario nuevo: "
+            android:textSize="14sp"
+            android:paddingTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tvJustificacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Justificación: "
+            android:textSize="14sp"
+            android:paddingTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tvDocente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Docente: "
+            android:textSize="14sp"
+            android:paddingTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tvFecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha: "
+            android:textSize="14sp"
+            android:paddingTop="2dp"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

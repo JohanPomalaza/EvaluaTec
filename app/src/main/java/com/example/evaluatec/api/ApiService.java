@@ -1,10 +1,12 @@
 package com.example.evaluatec.api;
 import com.example.evaluatec.modelos.Alumno;
+import com.example.evaluatec.modelos.AnioEscolarDto;
 import com.example.evaluatec.modelos.AsignacionActualizarDto;
 import com.example.evaluatec.modelos.AsignacionCrearDto;
 import com.example.evaluatec.modelos.AsignacionDto;
 import com.example.evaluatec.modelos.AsignacionGradoDto;
 import com.example.evaluatec.modelos.Curso;
+import com.example.evaluatec.modelos.CursoDto;
 import com.example.evaluatec.modelos.CursoMantenimiento;
 import com.example.evaluatec.modelos.CursoUpdateDTO;
 import com.example.evaluatec.modelos.DocenteCrearDto;
@@ -13,11 +15,15 @@ import com.example.evaluatec.modelos.DocenteEditarDto;
 import com.example.evaluatec.modelos.Estudiante;
 import com.example.evaluatec.modelos.EstudianteCrearDto;
 import com.example.evaluatec.modelos.EstudianteDto;
+import com.example.evaluatec.modelos.Grado;
 import com.example.evaluatec.modelos.GradoDto;
+import com.example.evaluatec.modelos.GradoSeccionDto;
 import com.example.evaluatec.modelos.HistorialCurso;
+import com.example.evaluatec.modelos.HistorialEstudiante;
 import com.example.evaluatec.modelos.HistorialNota;
 import com.example.evaluatec.modelos.HistorialRama;
 import com.example.evaluatec.modelos.HistorialTema;
+import com.example.evaluatec.modelos.NivelDto;
 import com.example.evaluatec.modelos.Nota;
 import com.example.evaluatec.modelos.NotaPorCurso;
 import com.example.evaluatec.modelos.NotificacionDto;
@@ -25,9 +31,12 @@ import com.example.evaluatec.modelos.RamaCurso;
 import com.example.evaluatec.modelos.RamaCursoCrearDTO;
 import com.example.evaluatec.modelos.RamaDto;
 import com.example.evaluatec.modelos.RamaEditarDto;
+import com.example.evaluatec.modelos.ResumenDocenteDto;
+import com.example.evaluatec.modelos.SeccionDto;
 import com.example.evaluatec.modelos.Secciones;
 import com.example.evaluatec.modelos.TemaCrearDTO;
 import com.example.evaluatec.modelos.TemaCurso;
+import com.example.evaluatec.modelos.TemaDTO;
 import com.example.evaluatec.modelos.TemaEditarDTO;
 import com.example.evaluatec.modelos.Usuario;
 
@@ -74,9 +83,10 @@ public interface ApiService {
     /* ------------------------------- */
 
     /*SE LISTA LOS ALUMNOS DE LA SECCION ASIGNADA AL DOCENTE*/
-    @GET("api/Curso/grado/{id_grado}/anio/{id_anio}/alumnos")
+    @GET("api/Curso/grado/{id_grado}/seccion/{id_seccion}/anio/{id_anio}/alumnos")
     Call<List<Alumno>> getAlumnosPorGrado(
             @Path("id_grado") int idGrado,
+            @Path("id_seccion") int idSeccion,
             @Path("id_anio") int idAnio
     );
     /* ------------------------------- */
@@ -93,11 +103,16 @@ public interface ApiService {
     @POST("api/Curso/notas/comentario")
     Call<ResponseBody> agregarOEditarNotaConComentario(
             @Query("id_usuario_estudiante") int idUsuarioEstudiante,
-            @Query("id_usuario_docente") int idUsuarioDocente,
             @Query("id_tema") int idTema,
             @Query("nota") String nota,
             @Query("comentario") String comentario,
+            @Query("id_usuario_docente") int idUsuarioDocente,
             @Query("justificacion") String justificacion
+    );
+    @GET("api/Curso/temas/pendientes")
+    Call<List<TemaDTO>> getTemasPendientes(
+            @Query("id_usuario_estudiante") int idUsuarioEstudiante,
+            @Query("id_rama") int idRama
     );
     @GET("api/Curso/notas/historial")
     Call<List<HistorialNota>> obtenerHistorialNota(
@@ -109,9 +124,6 @@ public interface ApiService {
 
     @GET("api/Curso")
     Call<List<CursoMantenimiento>> getCursos();
-
-    @GET("api/Curso/{id}")
-    Call<CursoMantenimiento> getCurso(@Path("id") int id);
 
     @POST("api/Curso")
     Call<CursoMantenimiento> crearCurso(
@@ -172,10 +184,13 @@ public interface ApiService {
 
     @GET("api/TemasCurso/historial/{idTema}")
     Call<List<HistorialTema>> getHistorialTema(@Path("idTema") int idTema);
+
+    @GET("api/TemasCurso/grados/porNivel/{idNivel}")
+    Call<List<Grado>> getGradosPorNivel(@Path("idNivel") int idNivel);
     /* ------------------------------- */
 
     /*CRUD PARA DOCENTES*/
-    @GET("api/docentes")
+    @GET("api/docentes/lista")
     Call<List<DocenteDto>> getDocentes();
 
     @POST("api/docentes")
@@ -184,23 +199,42 @@ public interface ApiService {
     @PUT("api/docentes/{id}")
     Call<Void> editarDocente(@Path("id") int id, @Body DocenteEditarDto docente);
 
+    @PUT("api/docentes/{id}/inactivar")
+    Call<Void> inactivarDocente(@Path("id") int idDocente);
+
     @POST("api/docentes/{idDocente}/asignar")
     Call<Void> asignarCurso(@Path("idDocente") int idDocente, @Body AsignacionCrearDto asignacion);
+    @GET("api/Docentes/{idDocente}/asignaciones")
+    Call<List<AsignacionDto>> getAsignacionesPorDocente(@Path("idDocente") int idDocente);
+
     @PUT("api/docentes/asignacion/{idAsignacion}")
-    Call<Void> actualizarAsignacion(@Path("idAsignacion") int idAsignacion, @Body AsignacionActualizarDto asignacion);
-
-    @GET("api/docentes/{id}/asignaciones")
-    Call<List<AsignacionDto>> getAsignacionesPorDocente(@Path("id") int idDocente);
-
-
-    @PUT("docentes/{id}/inactivar")
-    Call<Void> inactivarDocente(@Path("id") int idDocente);
+    Call<Void> actualizarAsignacion(@Path("idAsignacion") int idAsignacion, @Body AsignacionActualizarDto dto);
+    @GET("api/docentes/cursos/{idCurso}/ramas")
+    Call<List<RamaDto>> getRamasPorCursoDoc(@Path("idCurso") int idCurso);
 
     @GET("api/Docentes/grados")
     Call<List<GradoDto>> getGrados();
 
-    @GET("api/Docentes/ramas")
-    Call<List<RamaDto>> getRamas();
+    @GET("api/Docentes/grados/{idGrado}/secciones")
+    Call<List<SeccionDto>> getSeccionesPorGrado(@Path("idGrado") int idGrado);
+
+    @GET("api/Docentes/porNivel/{idNivel}")
+    Call<List<GradoSeccionDto>> getGradosYSeccionesPorNivel(@Path("idNivel") int idNivel);
+
+    @GET("api/Docentes/niveles")
+    Call<List<NivelDto>> getNiveles();
+
+    @GET("api/Docentes/anios")
+    Call<List<AnioEscolarDto>> getAniosEscolares();
+
+    @GET("api/docentes/cursos/porNivel/{idNivel}")
+    Call<List<CursoDto>> getCursosPorNivel(@Path("idNivel") int idNivel);
+
+    @PUT("api/docentes/asignacion/{idAsignacion}/inactivar")
+    Call<Void> eliminarAsignacion(@Path("idAsignacion") int idAsignacion);
+
+    @GET("api/docentes/{idDocente}/resumen")
+    Call<ResumenDocenteDto> obtenerResumenDocente(@Path("idDocente") int idDocente);
     /*-----------------------------------------------------------------------------------------------------------------------------*/
 
     /*-----CRUD ESTUDIANTE-----*/
@@ -220,6 +254,10 @@ public interface ApiService {
             @Path("idEstudiante") int idEstudiante,
             @Body AsignacionGradoDto dto
     );
+    @PUT("api/Estudiantes/{idEstudiante}/inactivar")
+    Call<Void> inactivarEstudiante(@Path("idEstudiante") int idEstudiante);
+    @GET("api/Estudiantes/{idEstudiante}/historial")
+    Call<List<HistorialEstudiante>> getHistorialEstudiante(@Path("idEstudiante") int idEstudiante);
     /*-----NOTIFICACIONES-----*/
 
     @PUT("api/curso/notificaciones/{id}/leer")

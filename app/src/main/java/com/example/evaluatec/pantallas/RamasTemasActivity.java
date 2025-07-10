@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import com.example.evaluatec.api.ApiCliente;
 import com.example.evaluatec.api.ApiService;
 import com.example.evaluatec.modelos.Curso;
 import com.example.evaluatec.modelos.CursoMantenimiento;
+import com.example.evaluatec.modelos.Grado;
 import com.example.evaluatec.modelos.HistorialCurso;
 import com.example.evaluatec.modelos.HistorialRama;
 import com.example.evaluatec.modelos.HistorialTema;
@@ -70,6 +73,7 @@ public class RamasTemasActivity extends AppCompatActivity {
     private RamaCurso ramaSeleccionada;
     private int usuarioId;
     private int gradoSeleccionado = 0;
+    private int idNivel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +92,7 @@ public class RamasTemasActivity extends AppCompatActivity {
         cursoId = getIntent().getIntExtra("cursoId", 0);
         cursoNombre = getIntent().getStringExtra("cursoNombre");
         usuarioId = getIntent().getIntExtra("usuarioId", 0);
+        idNivel = getIntent().getIntExtra("idNivel", 0);
 
         // Adaptadores
         ramasAdapter = new RamasAdapter(listaRamas, new RamasAdapter.OnRamaListener() {
@@ -429,6 +434,17 @@ public class RamasTemasActivity extends AppCompatActivity {
 
         View view = getLayoutInflater().inflate(R.layout.dialog_nuevo_tema, null);
         final EditText input = view.findViewById(R.id.edtNombreTema);
+        final TextView txtNivel = view.findViewById(R.id.txtNivelSeleccionado);
+        final Spinner spinnerGrado = view.findViewById(R.id.spinnerGrado);
+        EditText edtOrdenTema = view.findViewById(R.id.edtOrdenTema);
+
+        // Mostrar el nivel educativo ya recibido (1 = Primaria, 2 = Secundaria)
+        int idNivel = getIntent().getIntExtra("idNivel", 0);
+        String nombreNivel = idNivel == 1 ? "Primaria" : idNivel == 2 ? "Secundaria" : "Desconocido";
+        txtNivel.setText(nombreNivel);
+
+        // Cargar grados para el nivel recibido
+        cargarGradosPorNivel(idNivel, spinnerGrado);
 
         builder.setView(view);
 
@@ -438,11 +454,22 @@ public class RamasTemasActivity extends AppCompatActivity {
                 Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show();
                 return;
             }
+            String ordenStr = edtOrdenTema.getText().toString().trim();
+            if (ordenStr.isEmpty()) {
+                Toast.makeText(this, "Debes ingresar el orden del tema", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int orden = Integer.parseInt(ordenStr);
 
-            int idGrado = gradoSeleccionado;
+            Grado gradoSeleccionado = (Grado) spinnerGrado.getSelectedItem();
+            if (gradoSeleccionado == null) {
+                Toast.makeText(this, "Debes seleccionar un grado", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            // Construimos el DTO
-            TemaCrearDTO temaDTO = new TemaCrearDTO(nombre, ramaSeleccionada.getIdRama(), idGrado);
+            int idGrado = gradoSeleccionado.getIdGrado();
+
+            TemaCrearDTO temaDTO = new TemaCrearDTO(nombre, ramaSeleccionada.getIdRama(), idGrado, orden);
             Log.d("API_DEBUG", "Enviando: " + new Gson().toJson(temaDTO));
 
             apiService.crearTema(usuarioId, temaDTO).enqueue(new Callback<TemaCurso>() {
@@ -450,14 +477,13 @@ public class RamasTemasActivity extends AppCompatActivity {
                 public void onResponse(Call<TemaCurso> call, Response<TemaCurso> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         TemaCurso creado = response.body();
-
                         listaTemas.add(creado);
                         temasAdapter.notifyItemInserted(listaTemas.size() - 1);
 
                         Toast.makeText(RamasTemasActivity.this, "Tema agregado correctamente", Toast.LENGTH_SHORT).show();
                         Log.d("API_DEBUG", "Tema creado: " + new Gson().toJson(creado));
                     } else {
-                        Toast.makeText(RamasTemasActivity.this, "Error al guardar tema o el nombre del tema ya existe", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RamasTemasActivity.this, "Error al guardar tema o ya existe", Toast.LENGTH_SHORT).show();
                         Log.e("API_DEBUG", "Respuesta error: " + response.code());
                     }
                 }
@@ -473,6 +499,30 @@ public class RamasTemasActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
 
         builder.show();
+    }
+    private void cargarGradosPorNivel(int idNivel, Spinner spinnerGrado) {
+        apiService.getGradosPorNivel(idNivel).enqueue(new Callback<List<Grado>>() {
+            @Override
+            public void onResponse(Call<List<Grado>> call, Response<List<Grado>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Grado> grados = response.body();
+                    ArrayAdapter<Grado> adapter = new ArrayAdapter<>(
+                            RamasTemasActivity.this,
+                            android.R.layout.simple_spinner_item,
+                            grados
+                    );
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerGrado.setAdapter(adapter);
+                } else {
+                    Toast.makeText(RamasTemasActivity.this, "No se pudieron cargar los grados", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Grado>> call, Throwable t) {
+                Toast.makeText(RamasTemasActivity.this, "Error de red al cargar grados", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void EliminarTema(TemaCurso tema, int idUsuario) {

@@ -4,9 +4,30 @@ public class AsignacionGradoDto {
     private int idGrado;
     private int idAnioEscolar;
 
-    public AsignacionGradoDto(int idGrado, int idAnioEscolar) {
+    private int idSeccion;
+    private int usuarioResponsable;
+
+    public int getUsuarioResponsable() {
+        return usuarioResponsable;
+    }
+
+    public void setUsuarioResponsable(int usuarioResponsable) {
+        this.usuarioResponsable = usuarioResponsable;
+    }
+
+    public int getIdSeccion() {
+        return idSeccion;
+    }
+
+    public void setIdSeccion(int idSeccion) {
+        this.idSeccion = idSeccion;
+    }
+
+    public AsignacionGradoDto(int idGrado, int idAnioEscolar, int idSeccion, int usuarioResponsable) {
         this.idGrado = idGrado;
         this.idAnioEscolar = idAnioEscolar;
+        this.idSeccion = idSeccion;
+        this.usuarioResponsable = usuarioResponsable;
     }
 
     public int getIdGrado() {

@@ -83,6 +83,10 @@ public class ProfesoresMantenimientoActivity extends AppCompatActivity  {
                         public void onEditar(DocenteDto docente) {
                             mostrarDialogoProfesor(docente);
                         }
+                        @Override
+                        public void onEliminar(DocenteDto docente) {
+                            mostrarDialogoConfirmacionEliminar(docente.idUsuario);
+                        }
 
                         @Override
                         public void onVerAsignaciones(DocenteDto docente) {
@@ -192,5 +196,30 @@ public class ProfesoresMantenimientoActivity extends AppCompatActivity  {
                 Toast.makeText(ProfesoresMantenimientoActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void mostrarDialogoConfirmacionEliminar(int idDocente) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmar")
+                .setMessage("¿Deseas inactivar este docente?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    apiService.inactivarDocente(idDocente).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "Docente inactivado", Toast.LENGTH_SHORT).show();
+                                cargarDocentes(); // método para refrescar la lista
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Error al inactivar", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(getApplicationContext(), "Error de red", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 }

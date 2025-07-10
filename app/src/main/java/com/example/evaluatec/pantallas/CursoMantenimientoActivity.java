@@ -13,9 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +39,10 @@ import com.example.evaluatec.modelos.CursoMantenimiento;
 import com.example.evaluatec.modelos.CursoUpdateDTO;
 import com.example.evaluatec.modelos.HistorialCurso;
 import com.example.evaluatec.modelos.HistorialNota;
+import com.example.evaluatec.modelos.NivelEducativo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,6 +57,7 @@ public class CursoMantenimientoActivity extends AppCompatActivity {
     private Button btnAgregar;
     private ApiService apiService;
     private int usuarioId;
+    private int idNivel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +92,7 @@ public class CursoMantenimientoActivity extends AppCompatActivity {
                 intent.putExtra("cursoId", cursoMante.getIdCurso());
                 intent.putExtra("cursoNombre", cursoMante.getNombreCurso());
                 intent.putExtra("usuarioId", usuarioId);
+                intent.putExtra("idNivel", cursoMante.getIdNivel());
 
                 startActivity(intent);
             }
@@ -123,22 +130,37 @@ public class CursoMantenimientoActivity extends AppCompatActivity {
 
         View view = getLayoutInflater().inflate(R.layout.dialog_curso, null);
         EditText edtNombre = view.findViewById(R.id.edtNombreCurso);
+        Spinner spinnerNivel = view.findViewById(R.id.spinnerNivel);
 
+        String[] niveles = {"Selecciona un nivel", "Primaria", "Secundaria"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, niveles);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerNivel.setAdapter(adapter);
+
+
+        // Si es edición, setear datos
         if (cursoEditar != null) {
             edtNombre.setText(cursoEditar.getNombreCurso());
+
+            int index = cursoEditar.getIdNivel() == 1 ? 1 : 2;
+            spinnerNivel.setSelection(index);
         }
 
         builder.setView(view);
         builder.setPositiveButton("Guardar", (dialog, which) -> {
             String nombre = edtNombre.getText().toString().trim();
+            int selectedPosition = spinnerNivel.getSelectedItemPosition();
 
-            if (nombre.isEmpty()) {
-                Toast.makeText(this, "El nombre no puede estar vacío", Toast.LENGTH_SHORT).show();
+            if (nombre.isEmpty() || selectedPosition == 0) {
+                Toast.makeText(this, "Debes completar todos los campos", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            int idNivel = (selectedPosition == 1) ? 1 : 2;
+
             CursoMantenimiento curso = new CursoMantenimiento();
             curso.setNombreCurso(nombre);
+            curso.setIdNivel(idNivel);
 
             if (cursoEditar == null) {
                 crearCurso(curso, usuarioId);

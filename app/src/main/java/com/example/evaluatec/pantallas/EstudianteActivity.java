@@ -87,9 +87,6 @@ import retrofit2.Response;
                 if (itemId == R.id.nav_home) {
                     // Handle home selection
                     return true;
-                } else if (itemId == R.id.nav_search) {
-                    // Handle search selection
-                    return true;
                 } else if (itemId == R.id.nav_profile) {
                     startActivity(new Intent(EstudianteActivity.this, perfil_activity.class));
                     return true;
@@ -175,7 +172,7 @@ import retrofit2.Response;
                         listaNotas.addAll(response.body());
                         notaAdapter.actualizarLista(listaNotas);
                     } else {
-                        mostrarMensajeError("Error al cargar notas");
+                        mostrarMensajeError("Este curso no tiene notas registradas");
                     }
                 }
 

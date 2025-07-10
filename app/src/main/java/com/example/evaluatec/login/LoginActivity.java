@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -20,6 +21,7 @@ import com.example.evaluatec.api.LoginResponse;
 import com.example.evaluatec.modelos.Usuario;
 import com.example.evaluatec.pantallas.EstudianteActivity;
 import com.example.evaluatec.pantallas.ProfesorActivity;
+import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.material.textfield.TextInputLayout;
 
 import retrofit2.Call;
@@ -29,7 +31,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
-//aqui se crean las variables a usar para el login, junto con la variable para la conexion
+    //aqui se crean las variables a usar para el login, junto con la variable para la conexion
     private EditText usernameField;
     private EditText passwordField;
     private Button loginButton;
@@ -122,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Toast.makeText(LoginActivity.this, "Login exitoso: " + login.getMensaje(), Toast.LENGTH_SHORT).show();
 
-                    //Aqui obtiene la pantalla que corresponde segun rol
+
                     Intent intent;
                     if (login.getRol().equalsIgnoreCase("PROFESOR")) {
                         intent = new Intent(LoginActivity.this, ProfesorActivity.class);
@@ -142,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("rol", login.getRol());
 
                     startActivity(intent);
-                    finish(); // Cierra la actividad actual
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Credenciales incorrectas", Toast.LENGTH_SHORT).show();
                 }
@@ -157,6 +159,5 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleRegister() {
         Toast.makeText(this, "Go to Register Screen", Toast.LENGTH_SHORT).show();
-        //Esto seria para la activida de registro pero creo que eso se manejaria de forma interna
     }
 }

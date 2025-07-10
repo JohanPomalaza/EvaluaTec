@@ -29,4 +29,9 @@ public class Grado {
     public void setIdNivel(int idNivel) {
         this.idNivel = idNivel;
     }
+
+    @Override
+    public String toString() {
+        return nombreGrado;
+    }
 }

@@ -12,6 +12,19 @@ public class CursoMantenimiento {
 
     @SerializedName("idRama")
     private int idRama;
+    @SerializedName("idNivel")
+    private int idNivel;
+
+    public int getIdNivel() {
+        return idNivel;
+    }
+
+
+    public void setIdNivel(int idNivel) {
+        this.idNivel = idNivel;
+    }
+
+
 
     @SerializedName("rama")
     private String rama;

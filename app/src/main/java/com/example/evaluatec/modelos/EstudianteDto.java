@@ -4,46 +4,31 @@ public class EstudianteDto {
     private int idUsuario;
     private String nombre;
     private String apellido;
-    private String grado;
-    private int idGrado;
+    private String correo;
+    private AsignacionDto asignacion;
+    private int idUsuarioEstudiante;
 
-    public String getGrado() {
-        return grado;
+    public int getIdUsuarioEstudiante() {
+        return idUsuarioEstudiante;
     }
 
-    public void setGrado(String grado) {
-        this.grado = grado;
+    public void setIdUsuarioEstudiante(int idUsuarioEstudiante) {
+        this.idUsuarioEstudiante = idUsuarioEstudiante;
     }
 
-    public int getIdGrado() {
-        return idGrado;
-    }
+    // Getters y Setters
+    public int getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 
-    public void setIdGrado(int idGrado) {
-        this.idGrado = idGrado;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public int getIdUsuario() {
-        return idUsuario;
-    }
+    public String getApellido() { return apellido; }
+    public void setApellido(String apellido) { this.apellido = apellido; }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
+    public String getCorreo() { return correo; }
+    public void setCorreo(String correo) { this.correo = correo; }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
+    public AsignacionDto getAsignacion() { return asignacion; }
+    public void setAsignacion(AsignacionDto asignacion) { this.asignacion = asignacion; }
 }

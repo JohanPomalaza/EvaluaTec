@@ -3,6 +3,7 @@ package com.example.evaluatec.adaptadores;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ public class AsignacionAdapter extends RecyclerView.Adapter<AsignacionAdapter.Vi
 
     public interface OnAsignacionActionListener {
         void onEditar(AsignacionDto asignacion);
+        void onEliminar(AsignacionDto asignacion);
     }
 
     private List<AsignacionDto> lista;
@@ -37,10 +39,13 @@ public class AsignacionAdapter extends RecyclerView.Adapter<AsignacionAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AsignacionDto asignacion = lista.get(position);
-        holder.txtCurso.setText("Curso: " + asignacion.getRamaCursoNombre());
+        holder.txtCurso.setText("Curso: " + asignacion.getNombreCurso());
+        holder.txtRama.setText("Rama: " + asignacion.getRamaCursoNombre());
         holder.txtGrado.setText("Grado: " + asignacion.getGradoNombre());
+        holder.txtSeccion.setText("Sección: " + asignacion.getSeccionNombre());
 
-        holder.itemView.setOnClickListener(v -> listener.onEditar(asignacion));
+        holder.btnEditar.setOnClickListener(v -> listener.onEditar(asignacion));
+        holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(asignacion));
     }
 
     @Override
@@ -49,12 +54,17 @@ public class AsignacionAdapter extends RecyclerView.Adapter<AsignacionAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtCurso, txtGrado;
+        TextView txtCurso, txtRama, txtGrado, txtSeccion;
+        ImageButton btnEditar, btnEliminar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtCurso = itemView.findViewById(R.id.txtCurso);
+            txtRama = itemView.findViewById(R.id.txtRama);
             txtGrado = itemView.findViewById(R.id.txtGrado);
+            txtSeccion = itemView.findViewById(R.id.txtSeccion);
+            btnEditar = itemView.findViewById(R.id.btnEditar);
+            btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
     }
 }

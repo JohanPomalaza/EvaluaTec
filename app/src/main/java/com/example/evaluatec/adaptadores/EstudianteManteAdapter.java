@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,9 @@ public class EstudianteManteAdapter extends RecyclerView.Adapter<EstudianteMante
     public interface OnEstudianteListener {
         void onEditar(EstudianteDto estudiante);
         void onAsignarGrado(EstudianteDto estudiante);
+        void onEliminar(EstudianteDto estudiante);
+
+        void onVerHistorialEstudiante(EstudianteDto estudiante);
     }
 
     public EstudianteManteAdapter(List<EstudianteDto> estudiantes, OnEstudianteListener listener) {
@@ -39,13 +43,12 @@ public class EstudianteManteAdapter extends RecyclerView.Adapter<EstudianteMante
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         EstudianteDto estudiante = estudiantes.get(position);
         holder.txtNombre.setText(estudiante.getNombre() + " " + estudiante.getApellido());
-        if (estudiante.getGrado() != null && !estudiante.getGrado().isEmpty()) {
-            holder.txtGrado.setText("Grado: " + estudiante.getGrado());
-        } else {
-            holder.txtGrado.setText("Grado: No asignado");
-        }
+        holder.txtGrado.setText("Grado: " + (estudiante.getAsignacion() != null ? estudiante.getAsignacion().getGradoNombre() : "No asignado"));
+        holder.txtSeccion.setText("Sección: " + (estudiante.getAsignacion() != null ? estudiante.getAsignacion().getSeccionNombre() : "-"));
         holder.btnEditar.setOnClickListener(v -> listener.onEditar(estudiante));
         holder.btnAsignarGrado.setOnClickListener(v -> listener.onAsignarGrado(estudiante));
+        holder.btnEliminarEstudiante.setOnClickListener(v -> listener.onEliminar(estudiante));
+        holder.btnHistorialEstudiante.setOnClickListener(v -> listener.onVerHistorialEstudiante(estudiante));
     }
 
     @Override
@@ -54,8 +57,9 @@ public class EstudianteManteAdapter extends RecyclerView.Adapter<EstudianteMante
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNombre,txtGrado;
+        TextView txtNombre,txtGrado,txtSeccion;
         Button btnEditar, btnAsignarGrado;
+        ImageButton btnHistorialEstudiante,btnEliminarEstudiante;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +67,9 @@ public class EstudianteManteAdapter extends RecyclerView.Adapter<EstudianteMante
             btnEditar = itemView.findViewById(R.id.btnEditar);
             btnAsignarGrado = itemView.findViewById(R.id.btnAsignarGrado);
             txtGrado = itemView.findViewById(R.id.txtGrado);
+            txtSeccion = itemView.findViewById(R.id.txtSeccion);
+            btnHistorialEstudiante = itemView.findViewById(R.id.btnHistorialEstudiante);
+            btnEliminarEstudiante = itemView.findViewById(R.id.btnEliminarEstudiante);
         }
     }
 }

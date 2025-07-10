@@ -53,7 +53,7 @@ public class SeccionesAdapter extends RecyclerView.Adapter<SeccionesAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Secciones seccion = listaSecciones.get(position);
-        holder.txtTitulo.setText(seccion.getNombreGrado());
+        holder.txtTitulo.setText(seccion.getNombreGrado() + " " + seccion.getSeccionNombre());
 
         holder.txtTitulo.setOnClickListener(v -> {
             if (holder.layoutAlumnos.getVisibility() == View.GONE) {
@@ -61,9 +61,10 @@ public class SeccionesAdapter extends RecyclerView.Adapter<SeccionesAdapter.View
                 holder.layoutAlumnos.removeAllViews();
 
                 int idGrado = seccion.getIdGrado();
+                int idSeccion = seccion.getIdSeccion();
                 int idAnio = seccion.getIdAnioEscolar();
 
-            apiService.getAlumnosPorGrado(idGrado, idAnio).enqueue(new Callback<List<Alumno>>() {
+            apiService.getAlumnosPorGrado(idGrado,idSeccion,idAnio).enqueue(new Callback<List<Alumno>>() {
                 @Override
                 public void onResponse(Call<List<Alumno>> call, Response<List<Alumno>> response) {
                     if(response.isSuccessful() && response.body() != null) {

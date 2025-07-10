@@ -5,10 +5,21 @@ public class TemaCrearDTO {
     private int idRama;
     private int idGrado;
 
-    public TemaCrearDTO(String nombre, int idRama, int idGrado) {
+    public int getOrden() {
+        return Orden;
+    }
+
+    public void setOrden(int orden) {
+        Orden = orden;
+    }
+
+    private int Orden;
+
+    public TemaCrearDTO(String nombre, int idRama, int idGrado, int orden) {
         this.nombre = nombre;
         this.idRama = idRama;
         this.idGrado = idGrado;
+        this.Orden = orden;
     }
 
     public String getNombre() {

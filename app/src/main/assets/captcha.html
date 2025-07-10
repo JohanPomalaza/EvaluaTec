@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>reCAPTCHA</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onCaptchaVerified(token) {
+            window.Android.receiveToken(token);
+        }
+    </script>
+</head>
+<body>
+<div class="g-recaptcha"
+     data-sitekey="6Lfw7n0rAAAAANR93R8fQushz6R8gofTOeu8MLvy"
+     data-callback="onCaptchaVerified">
+</div>
+</body>
+</html>

@@ -47,6 +47,14 @@ public class cursoMantenimientoAdapter extends RecyclerView.Adapter<cursoManteni
         CursoMantenimiento cursoMante = lista.get(position);
         holder.txtNombre.setText(cursoMante.getNombreCurso());
 
+        if (cursoMante.getIdNivel() == 1) {
+            holder.txtNivelCurso.setText("Nivel: Primaria");
+        } else if (cursoMante.getIdNivel() == 2) {
+            holder.txtNivelCurso.setText("Nivel: Secundaria");
+        } else {
+            holder.txtNivelCurso.setText("Nivel: No definido");
+        }
+
         holder.btnEditar.setOnClickListener(v -> listener.onEditar(cursoMante, usuarioId));
         holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(cursoMante, usuarioId));
         holder.btnRamasTemas.setOnClickListener(v -> listener.onVerRamasYTemas(cursoMante, usuarioId));
@@ -59,7 +67,7 @@ public class cursoMantenimientoAdapter extends RecyclerView.Adapter<cursoManteni
         return lista.size();
     }
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNombre;
+        TextView txtNombre,txtNivelCurso;
         //Button btnEditar, btnEliminar, btnRamasTemas;
 
         ImageButton btnEditar, btnEliminar, btnRamasTemas,btnHistorialCurso;
@@ -71,6 +79,7 @@ public class cursoMantenimientoAdapter extends RecyclerView.Adapter<cursoManteni
             btnEliminar = itemView.findViewById(R.id.btnEliminarCurso);
             btnRamasTemas = itemView.findViewById(R.id.btnVerRamasTemas);
             btnHistorialCurso = itemView.findViewById(R.id.btnHistorialCurso);
+            txtNivelCurso = itemView.findViewById(R.id.txtNivelCurso);
         }
     }
 

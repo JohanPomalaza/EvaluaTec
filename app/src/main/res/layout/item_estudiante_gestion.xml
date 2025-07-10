@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Nombre alineado a la izquierda -->
+        <!-- Nombre del estudiante -->
         <TextView
             android:id="@+id/txtNombre"
             android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true" />
 
-        <!-- Botón eliminar alineado arriba a la derecha -->
+        <!-- Botón eliminar -->
         <ImageButton
             android:id="@+id/btnEliminarEstudiante"
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true" />
 
-        <!-- Texto del grado debajo del nombre -->
+        <!-- Grado asignado -->
         <TextView
             android:id="@+id/txtGrado"
             android:layout_width="wrap_content"
@@ -51,13 +51,25 @@
             android:layout_alignStart="@id/txtNombre"
             android:layout_marginTop="8dp" />
 
-        <!-- Botones alineados horizontalmente debajo del grado -->
+        <!-- Sección asignada -->
+        <TextView
+            android:id="@+id/txtSeccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sección: -"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_below="@id/txtGrado"
+            android:layout_alignStart="@id/txtNombre"
+            android:layout_marginTop="4dp" />
+
+        <!-- Botones -->
         <LinearLayout
             android:id="@+id/linearBotones"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txtGrado"
+            android:layout_below="@id/txtSeccion"
             android:layout_alignStart="@id/txtNombre"
             android:layout_marginTop="12dp">
 
@@ -95,7 +107,6 @@
                 android:src="@drawable/ic_history"
                 app:tint="?attr/colorPrimary"
                 android:layout_marginStart="16dp" />
-
         </LinearLayout>
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
