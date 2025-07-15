@@ -14,7 +14,7 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="#1976D2"
+        android:background="#0D47A1"
         android:text="Cursos por Alumno"
         android:textColor="#FFFFFF"
         android:textSize="22sp"

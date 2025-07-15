@@ -88,8 +88,10 @@ import retrofit2.Response;
                     // Handle home selection
                     return true;
                 } else if (itemId == R.id.nav_profile) {
-                    startActivity(new Intent(EstudianteActivity.this, perfil_activity.class));
-                    return true;
+                    Intent intent = new Intent(this, perfil_activity.class);
+                    intent.putExtra("usuarioId", usuarioId);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
                 }
                 return false;
             });

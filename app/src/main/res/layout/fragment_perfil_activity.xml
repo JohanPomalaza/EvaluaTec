@@ -1,23 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:padding="16dp">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        android:text="Panel del Profesor"
-        android:textSize="24sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <!-- Fondo degradado con altura proporcional -->
+    <View
+        android:id="@+id/headerBackground"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        android:background="@drawable/gradient_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/btnIngresarNotas"
-        android:layout_width="match_parent"
+    <!-- Botón de ajustes alineado correctamente -->
+    <ImageButton
+        android:id="@+id/btnSettings"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_settings"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="@color/white"
+        android:padding="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- Contenedor de imagen de perfil con posición absoluta sobre el degradado -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgPerfil"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_user"
+        app:civ_border_width="4dp"
+        app:civ_border_color="@color/white"
+        android:elevation="8dp"
+        app:layout_constraintTop_toTopOf="@id/headerBackground"
+        app:layout_constraintBottom_toBottomOf="@id/headerBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="40dp"/>
+
+    <!-- 3.1 FAB para editar foto (ahora referenciando al ConstraintLayout) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabEditPhoto"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_camera"
+        app:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="@id/imgPerfil"
+        app:layout_constraintTop_toTopOf="@id/imgPerfil"
+        app:layout_constraintBottom_toBottomOf="@id/imgPerfil"
+        app:layout_constraintEnd_toEndOf="@id/imgPerfil"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="80dp"
+        android:elevation="12dp"/>
+
+    <!-- Sección de información personal -->
+    <LinearLayout
+        android:id="@+id/sectionInfo"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Ingresar Notas" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/imgPerfil"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="24dp">
 
-    <Button
-        android:id="@+id/btnEditarContenido"
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Juan Pérez"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/txtGradoSeccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_course"
+            android:drawablePadding="4dp"
+            android:text="5to Secundaria - Sección B"
+            android:textColor="@color/gray_dark"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Tarjeta de información con márgenes consistentes -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardDatos"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Editar Contenido" />
-</LinearLayout>
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/sectionInfo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="8dp">
+
+            <!-- Item Correo -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_mail"
+                    app:tint="@color/white"
+                    android:layout_gravity="center_vertical"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Correo electrónico"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray"/>
+
+                    <TextView
+                        android:id="@+id/txtCorreo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="juan.perez@email.com"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="2dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="60dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/divider_color"/>
+
+            <!-- Item DNI -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/baseline_credit_card_24"
+                    app:tint="@color/white"
+                    android:layout_gravity="center_vertical"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DNI"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray"/>
+
+                    <TextView
+                        android:id="@+id/txtDni"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="12345678"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="2dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="60dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/divider_color"/>
+
+            <!-- Item Teléfono -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_phone"
+                    app:tint="@color/white"
+                    android:layout_gravity="center_vertical"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Teléfono"
+                        android:textSize="12sp"
+                        android:textColor="@color/gray"/>
+
+                    <TextView
+                        android:id="@+id/txtTelefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="987654321"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="2dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Botones de acción con márgenes consistentes -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/cardDatos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditar"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Editar perfil"
+            app:icon="@drawable/ic_edit"
+            app:iconTint="@color/primary_color"
+            app:strokeColor="@color/primary_color"
+            app:strokeWidth="1dp"
+            android:textColor="@color/primary_color"
+            app:cornerRadius="12dp"
+            android:layout_marginEnd="8dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCompartir"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Compartir"
+            app:iconTint="@color/white"
+            app:backgroundTint="@color/primary_color"
+            app:cornerRadius="12dp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- Bottom navigation con margen inferior -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginHorizontal="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:elevation="4dp"
+        app:itemIconTint="@color/bottom_nav_selector"
+        app:itemTextColor="@color/bottom_nav_selector"
+        app:menu="@menu/bottom_nav_menu"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
